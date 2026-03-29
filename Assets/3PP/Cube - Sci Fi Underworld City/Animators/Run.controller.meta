@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 964c080426d17be4587602903e02feae
+timeCreated: 1511513917
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105742
+  packageName: CUBE - Sci Fi Underworld City Pack
+  packageVersion: 1.7
+  assetPath: Assets/Cube - Sci Fi Underworld City/Animators/Run.controller
+  uploadId: 373424

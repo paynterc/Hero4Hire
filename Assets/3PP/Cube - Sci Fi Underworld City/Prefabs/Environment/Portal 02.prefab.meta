@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 823db993b74404843989b85bb15a4d8f
+timeCreated: 1510471696
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105742
+  packageName: CUBE - Sci Fi Underworld City Pack
+  packageVersion: 1.7
+  assetPath: Assets/Cube - Sci Fi Underworld City/Prefabs/Environment/Portal 02.prefab
+  uploadId: 373424

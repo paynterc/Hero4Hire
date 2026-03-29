@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2653d12a6dd346b4cbfa5200252cb577
+timeCreated: 1510470519
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 105742
+  packageName: CUBE - Sci Fi Underworld City Pack
+  packageVersion: 1.7
+  assetPath: Assets/Cube - Sci Fi Underworld City/Prefabs/Environment/Spotlight 01.prefab
+  uploadId: 373424

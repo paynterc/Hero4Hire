@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3372ba62c59245c9afb788ea48a424e, type: 3}
+  m_Name: BaseRangedAttack
+  m_EditorClassIdentifier: Assembly-CSharp::BaseRangedAttackAbility
+  abilityName: Ranged Attack
+  abilityType: 0
+  energyCost: 5
+  projectilePrefab: {fileID: 1523153560657062, guid: 81c4f6a987bb9b44184e51ede81129d5, type: 3}
+  muzzleFlashPrefab: {fileID: 1000012903210382, guid: 575f1cf1c4503354a9a2e195b40e2bea, type: 3}
+  fireSound: {fileID: 0}
+  force: 2000

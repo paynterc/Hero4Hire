@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d52dcdaa585f84b369b8eae2b2669d49, type: 3}
+  m_Name: IceProjectile
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileModelAbility
+  abilityName: Ice Projectile
+  abilityType: 1
+  energyCost: 20
+  slot: 0
+  projectilePrefab: {fileID: 1523153560657062, guid: 19c7f662c0bf1a447be313604bf5e7a3, type: 3}
+  muzzleFlashPrefab: {fileID: 1000012903210382, guid: 0bb2091220a6d754686c0d0486f7f56e, type: 3}
