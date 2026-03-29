@@ -280,8 +280,8 @@ GameObject:
   - component: {fileID: 276271725}
   - component: {fileID: 276271724}
   - component: {fileID: 276271723}
-  - component: {fileID: 276271722}
   - component: {fileID: 276271731}
+  - component: {fileID: 276271732}
   m_Layer: 3
   m_Name: Enemy
   m_TagString: Untagged
@@ -289,21 +289,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &276271722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 276271721}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b7d583e3af45447a91700ec734a5f2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCController
-  target: {fileID: 889776919}
-  attackRange: 10
-  stopDistance: 5
 --- !u!114 &276271723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -493,6 +478,107 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &276271732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276271721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c56862f2bcc247c4b2220f0a0adbfb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AIBrain
+  nodes:
+  - name: Searching
+    state:
+      rid: 7818319936611680495
+    transitions:
+    - condition:
+        rid: 7818319936611680496
+      invert: 0
+      targetNodeName: ApproachTarget
+  - name: ApproachTarget
+    state:
+      rid: 7818319936611680497
+    transitions:
+    - condition:
+        rid: 7818319936611680498
+      invert: 0
+      targetNodeName: Attack
+  - name: Attack
+    state:
+      rid: 7818319936611680502
+    transitions:
+    - condition:
+        rid: 7818319936611680498
+      invert: 1
+      targetNodeName: ApproachTarget
+    - condition:
+        rid: 7818319936611680499
+      invert: 1
+      targetNodeName: GoToLastLocation
+  - name: GoToLastLocation
+    state:
+      rid: 7818319936611680500
+    transitions:
+    - condition:
+        rid: 7818319936611680501
+      invert: 1
+      targetNodeName: Searching
+    - condition:
+        rid: 7818319936611680499
+      invert: 0
+      targetNodeName: ApproachTarget
+  references:
+    version: 2
+    RefIds:
+    - rid: 7818319936611680495
+      type: {class: SearchingState, ns: , asm: Assembly-CSharp}
+      data:
+        detectionRange: 10
+        targetLayers:
+          serializedVersion: 2
+          m_Bits: 64
+    - rid: 7818319936611680496
+      type: {class: TargetDetectedCondition, ns: , asm: Assembly-CSharp}
+      data:
+        range: 10
+        obstacleLayers:
+          serializedVersion: 2
+          m_Bits: 256
+    - rid: 7818319936611680497
+      type: {class: ApproachingState, ns: , asm: Assembly-CSharp}
+      data:
+        stoppingDistance: 2
+    - rid: 7818319936611680498
+      type: {class: TargetInRangeCondition, ns: , asm: Assembly-CSharp}
+      data:
+        range: 6
+    - rid: 7818319936611680499
+      type: {class: TargetDetectedCondition, ns: , asm: Assembly-CSharp}
+      data:
+        range: 10
+        obstacleLayers:
+          serializedVersion: 2
+          m_Bits: 256
+    - rid: 7818319936611680500
+      type: {class: ApproachLastKnownLocation, ns: , asm: Assembly-CSharp}
+      data:
+        stoppingDistance: 1
+    - rid: 7818319936611680501
+      type: {class: TargetDetectedCondition, ns: , asm: Assembly-CSharp}
+      data:
+        range: 10
+        obstacleLayers:
+          serializedVersion: 2
+          m_Bits: 256
+    - rid: 7818319936611680502
+      type: {class: AttackingState, ns: , asm: Assembly-CSharp}
+      data:
+        attackSlot: 0
+        attackInterval: 1
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
