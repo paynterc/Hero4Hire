@@ -317,6 +317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 100
+  currentHealth: 0
   isInvulnerable: 0
 --- !u!114 &276271725
 MonoBehaviour:
@@ -1072,6 +1073,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 100
+  currentHealth: 0
   isInvulnerable: 0
 --- !u!114 &889776913
 MonoBehaviour:
@@ -1100,6 +1102,12 @@ MonoBehaviour:
     slot: 0
   - ability: {fileID: 11400000, guid: 7fbbcc05e8eea414d9c366672eb11b1f, type: 2}
     slot: 3
+  - ability: {fileID: 11400000, guid: 527e06da6733345c285db23c7398975a, type: 2}
+    slot: 2
+  - ability: {fileID: 11400000, guid: 16b2bdf32b0844a4a90c8e1af26d2305, type: 2}
+    slot: 0
+  - ability: {fileID: 11400000, guid: 76f583641c1414acfb26b5f7e9e86144, type: 2}
+    slot: 1
 --- !u!114 &889776914
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -17,5 +17,6 @@ public class ShotData : IActionData
     public ActionSlot slot;
 	public ActionContext context;
 	public float energyCost = 0f;
+	public int damage = 10;
 
 }

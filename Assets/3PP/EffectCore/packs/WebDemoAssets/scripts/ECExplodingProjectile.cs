@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 /* THIS CODE IS JUST FOR PREVIEW AND TESTING */
 // Feel free to use any code and picking on it, I cannot guaratnee it will fit into your project
@@ -21,6 +22,8 @@ public class ECExplodingProjectile : MonoBehaviour
     public float projectileSpeedMultiplier;
 
     public bool ignorePrevRotation = false;
+
+    [HideInInspector] public Action<GameObject> OnHitCallback;
 
     public bool explodeOnTimer = false;
     public float explosionTimer;
@@ -89,6 +92,7 @@ public class ECExplodingProjectile : MonoBehaviour
             Quaternion rot = Quaternion.FromToRotation(Vector3.forward, hit.normal);
             Vector3 pos = hit.point;
             Instantiate(impactPrefab, pos, rot);
+            OnHitCallback?.Invoke(hit.collider.gameObject);
             if (!explodeOnTimer && Missile == false)
             {
                 Destroy(gameObject);
@@ -116,6 +120,7 @@ public class ECExplodingProjectile : MonoBehaviour
             }
             Vector3 pos = contact.point;
             Instantiate(impactPrefab, pos, rot);
+            OnHitCallback?.Invoke(collision.gameObject);
             if (!explodeOnTimer && Missile == false)
             {
                 Destroy(gameObject);

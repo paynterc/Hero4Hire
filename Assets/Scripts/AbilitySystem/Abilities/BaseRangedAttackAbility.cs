@@ -33,4 +33,21 @@ public class BaseRangedAttackAbility : Ability
         energy.Spend(energyCost);
         instance.TriggerFireRate(0.2f);
     }
+    
+    public override void ModifyProjectile(GameObject owner, AbilityInstance instance, ProjectileData data)
+    {
+        if (!MatchesSlot(instance, data.slot)) return;
+		data.OnHit += (target) =>
+		{
+
+			var health = target.GetComponent<Health>();
+			if (health != null)
+			{
+				health.TakeDamage((int)data.damage);
+			}
+		};
+
+    }
+    
+    
 }

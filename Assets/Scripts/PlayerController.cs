@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public bool justLanded = true;
 
     private CharacterController controller;
+    private AbilitySystem abilitySystem;
     private Vector3 velocity;
     private Vector3 currentMove;
     
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        abilitySystem = GetComponent<AbilitySystem>();
         Cursor.lockState = CursorLockMode.None;
 		Cursor.visible = true;
 
@@ -45,7 +47,6 @@ public class PlayerController : MonoBehaviour
 
         HandleGravity();
         
-        var abilitySystem = GetComponent<AbilitySystem>();
         abilitySystem.SetHeld(ActionSlot.Primary, Input.GetMouseButton(0));   // Left click
 		abilitySystem.SetHeld(ActionSlot.Secondary, Input.GetMouseButton(1)); // Right click
 
@@ -142,8 +143,10 @@ public class PlayerController : MonoBehaviour
             if (yVelocity < 0){
             	yVelocity = -2f;
             }
-            if(!justLanded){
-            	justLanded=true;
+            if (!justLanded)
+            {
+                justLanded = true;
+                abilitySystem.TriggerLand(ActionSlot.Jump);
             }
 
         }

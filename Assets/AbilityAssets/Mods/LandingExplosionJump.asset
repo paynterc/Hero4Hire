@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b1696d371cdc4beb86f18c19d23cd71, type: 3}
+  m_Name: LandingExplosionJump
+  m_EditorClassIdentifier: Assembly-CSharp::LandingExplosionAbility
+  abilityName: Explosive Landing
+  abilityType: 5
+  energyCost: 20
+  explosionPrefab: {fileID: 1000012903210382, guid: 3735129208580034781b585da5229bda, type: 3}
+  explosionRadius: 5
+  explosionDamage: 50
+  damageLayers:
+    serializedVersion: 2
+    m_Bits: 8

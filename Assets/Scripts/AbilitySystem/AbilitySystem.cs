@@ -168,7 +168,7 @@ public class AbilitySystem : MonoBehaviour
 			{
 				speed = shot.force,
 				lifetime = 3f,
-				damage = shot.force, // adjust later if needed
+				damage = shot.damage, // adjust later if needed
 				context = shot.context,
 
 				OnSpawn = (go) =>
@@ -178,7 +178,6 @@ public class AbilitySystem : MonoBehaviour
 
 				OnHit = (target) =>
 				{
-					Debug.Log("Hit: " + target.name);
 					// Future: apply damage here
 				},
 				slot = shot.slot
@@ -211,6 +210,16 @@ public class AbilitySystem : MonoBehaviour
 	}
 
 	
+	public void TriggerLand(ActionSlot slot)
+	{
+		var jump = new JumpData { slot = slot };
+
+		foreach (var ability in abilities)
+		{
+			ability.ability.OnLand(gameObject, ability, jump);
+		}
+	}
+
 	bool HasBaseInSlot(ActionSlot slot, AbilityType type)
 	{
 		return abilities.Any(a =>
