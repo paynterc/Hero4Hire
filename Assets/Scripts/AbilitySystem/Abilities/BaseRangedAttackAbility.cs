@@ -17,6 +17,7 @@ public class BaseRangedAttackAbility : Ability
         shot.muzzleFlashPrefab = muzzleFlashPrefab;
         shot.fireSound = fireSound;
         shot.force = force;
+        shot.energyCost += energyCost;
     }
 
     public override void OnUpdate(GameObject owner, AbilityInstance instance)
@@ -26,11 +27,14 @@ public class BaseRangedAttackAbility : Ability
         if (!instance.CanFire()) return;
 
         var energy = owner.GetComponent<Energy>();
-        if (energy == null || !energy.HasEnough(energyCost)) return;
+        if (energy == null) return;
 
-        owner.GetComponent<AbilitySystem>().Fire(instance.slot);
+        float totalCost = system.CalculateShotCost(instance.slot);
+        if (!energy.HasEnough(totalCost)) return;
 
-        energy.Spend(energyCost);
+        system.Fire(instance.slot);
+
+        energy.Spend(totalCost);
         instance.TriggerFireRate(0.2f);
     }
     

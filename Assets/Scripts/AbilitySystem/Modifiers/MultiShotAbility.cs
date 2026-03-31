@@ -9,5 +9,6 @@ public class MultiShotAbility : Ability
     {
     	if (!MatchesSlot(instance, shot.slot)) return;
         shot.projectileCount += extraProjectiles;
+        shot.energyCost += energyCost;
     }
 }

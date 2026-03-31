@@ -210,6 +210,14 @@ public class AbilitySystem : MonoBehaviour
 	}
 
 	
+	public float CalculateShotCost(ActionSlot slot)
+	{
+		var shot = new ShotData { slot = slot };
+		foreach (var ability in abilities)
+			ability.ability.ModifyShot(gameObject, ability, shot);
+		return shot.energyCost;
+	}
+
 	public void TriggerLand(ActionSlot slot)
 	{
 		var jump = new JumpData { slot = slot };

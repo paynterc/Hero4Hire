@@ -31,7 +31,7 @@ public class ExplosiveShotAbility : Ability
 
 			if (explosionPrefab != null)
 				Instantiate(explosionPrefab, position, Quaternion.identity);
-			Debug.Log("Start Explosion Prefab");
+				Debug.Log("Start Explosion Prefab");
 
 			var hits = Physics.OverlapSphere(position, explosionRadius, damageLayers);
 			foreach (var hit in hits)

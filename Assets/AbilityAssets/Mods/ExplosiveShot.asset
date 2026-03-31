@@ -15,7 +15,7 @@ MonoBehaviour:
   abilityName: Explosive Shot
   abilityType: 0
   energyCost: 20
-  explosionPrefab: {fileID: 1228869523896316, guid: fc5bb91b75f2d534baa87e6dfa478b49, type: 3}
+  explosionPrefab: {fileID: 1000012903210382, guid: d750af61c62eb2140b5bfda6bafa9e6f, type: 3}
   explosionRadius: 5
   explosionDamage: 50
   damageLayers:
