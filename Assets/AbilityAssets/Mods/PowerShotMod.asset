@@ -14,6 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PowerShotAbility
   abilityName: 
   abilityType: 1
-  energyCost: 20
-  slot: 0
+  energyCost: 5
   bonusForce: 500

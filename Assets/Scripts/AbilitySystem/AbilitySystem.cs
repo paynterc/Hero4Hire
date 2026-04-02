@@ -12,6 +12,7 @@ public struct AbilitySlotBinding
 public class AbilitySystem : MonoBehaviour
 {
     public List<AbilitySlotBinding> startingAbilities;
+    public Transform firePoint;
 
     private List<AbilityInstance> abilities = new List<AbilityInstance>();
     
@@ -107,8 +108,9 @@ public class AbilitySystem : MonoBehaviour
 	{
 		ShotData shot = new ShotData();
 
-		shot.origin = transform.position + transform.forward;
-		shot.direction = transform.forward;
+		Transform origin = firePoint != null ? firePoint : transform;
+		shot.origin = origin.position;
+		shot.direction = origin.forward;
 		shot.slot = slot;
 		shot.context = new ActionContext
 		{

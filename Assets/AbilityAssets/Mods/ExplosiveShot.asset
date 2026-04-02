@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExplosiveShotAbility
   abilityName: Explosive Shot
   abilityType: 0
-  energyCost: 20
+  energyCost: 60
   explosionPrefab: {fileID: 1000012903210382, guid: d750af61c62eb2140b5bfda6bafa9e6f, type: 3}
   explosionRadius: 5
   explosionDamage: 50
