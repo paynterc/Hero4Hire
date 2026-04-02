@@ -9,11 +9,15 @@ public class PlayerController : MonoBehaviour
     public float gravity = -20f;
     public float rotationSpeed = 15f;
     public bool justLanded = true;
+    public bool isGroundedDebug;
 
     private CharacterController controller;
     private AbilitySystem abilitySystem;
+    private Animator animator;
     private Vector3 velocity;
     private Vector3 currentMove;
+    private float groundedTimer = 0f;
+    private const float groundedGraceTime = 0.1f;
     
     [HideInInspector] public Vector3 externalVelocity;
 	[HideInInspector] public bool overrideMovement = false;
@@ -25,6 +29,7 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         abilitySystem = GetComponent<AbilitySystem>();
+        animator = GetComponentInChildren<Animator>();
         Cursor.lockState = CursorLockMode.None;
 		Cursor.visible = true;
 
@@ -34,7 +39,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
     
-    	
+    	isGroundedDebug = controller.isGrounded;
     	if (!overrideMovement)
 		{
        		HandleRotation();
@@ -67,6 +72,19 @@ public class PlayerController : MonoBehaviour
 		Vector3 finalMove = move + Vector3.up * yVelocity;
 
         controller.Move(finalMove * Time.deltaTime);
+
+        if (controller.isGrounded)
+            groundedTimer = groundedGraceTime;
+        else
+            groundedTimer -= Time.deltaTime;
+
+        float moveX = currentMove.magnitude > 0.01f
+            ? Vector3.Dot(currentMove.normalized, transform.right)
+            : 0f;
+
+        animator?.SetFloat("Speed", currentMove.magnitude);
+        animator?.SetFloat("MoveX", moveX);
+        animator?.SetBool("IsGrounded", groundedTimer > 0f);
     }
 
 	void HandleRotation()
