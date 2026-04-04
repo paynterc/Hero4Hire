@@ -88,6 +88,9 @@ public class ECExplodingProjectile : MonoBehaviour
         float dist = Vector3.Distance(transform.position, prevPos);
         if (Physics.Raycast(ray, out hit, dist))
         {
+            
+            if (hit.collider.CompareTag("FX"))
+            	return;
             transform.position = hit.point;
             Quaternion rot = Quaternion.FromToRotation(Vector3.forward, hit.normal);
             Vector3 pos = hit.point;
@@ -110,7 +113,7 @@ public class ECExplodingProjectile : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag != "FX")
+        if (!collision.gameObject.CompareTag("FX"))
         {
             ContactPoint contact = collision.contacts[0];
             Quaternion rot = Quaternion.FromToRotation(Vector3.forward, contact.normal);

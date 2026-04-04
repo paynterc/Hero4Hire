@@ -9,6 +9,7 @@ public class Health : MonoBehaviour
     public bool isInvulnerable = false;
 
     public event Action OnDeath;
+    public event Action<GameObject> OnDamage;
 
     private bool isDead = false;
 
@@ -17,13 +18,15 @@ public class Health : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, GameObject attacker = null)
     {
         if (isInvulnerable || isDead) return;
 
         currentHealth = Mathf.Max(currentHealth - amount, 0);
 
         Debug.Log("Took damage: " + amount);
+
+        OnDamage?.Invoke(attacker);
 
         if (currentHealth <= 0)
         {

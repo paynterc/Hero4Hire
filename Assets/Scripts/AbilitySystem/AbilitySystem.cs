@@ -118,10 +118,16 @@ public class AbilitySystem : MonoBehaviour
 			timestamp = Time.time
 		};
 
+        foreach (var ability in abilities)
+		{
+			ability.ability.InitializeShot(gameObject, ability, shot);
+		}
+        
+
 		// Let ALL abilities modify the shot
 		foreach (var ability in abilities)
 		{
-			ability.ability.ModifyAction(gameObject, ability, shot);
+			ability.ability.ModifyShot(gameObject, ability, shot);
 		}
 
 		// Execute final shot
@@ -211,14 +217,30 @@ public class AbilitySystem : MonoBehaviour
 
 	}
 
+	// ShotData should have the slot already added before you run these modifiers
+	public void BuildShotDataForSlot(ShotData shot)
+	{
 	
+		foreach (var ability in abilities)
+			ability.ability.InitializeShot(gameObject, ability, shot);		
+		foreach (var ability in abilities)
+			ability.ability.ModifyShot(gameObject, ability, shot);
+	
+	}
+	
+		
 	public float CalculateShotCost(ActionSlot slot)
 	{
 		var shot = new ShotData { slot = slot };
 		foreach (var ability in abilities)
+			ability.ability.InitializeShot(gameObject, ability, shot);		
+		foreach (var ability in abilities)
 			ability.ability.ModifyShot(gameObject, ability, shot);
 		return shot.energyCost;
 	}
+	
+
+	
 
 	public void TriggerLand(ActionSlot slot)
 	{

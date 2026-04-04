@@ -6,6 +6,8 @@ public class AIBrain : MonoBehaviour
 {
     public List<AIStateNode> nodes;
 
+    public string currentStateName;
+
     private AIStateNode currentNode;
     private AIContext ctx;
 
@@ -15,8 +17,13 @@ public class AIBrain : MonoBehaviour
         {
             owner = gameObject,
             agent = GetComponent<NavMeshAgent>(),
-            abilitySystem = GetComponent<AbilitySystem>()
+            abilitySystem = GetComponent<AbilitySystem>(),
+            spawnPosition = transform.position
         };
+
+        var health = GetComponent<Health>();
+        if (health != null)
+            health.OnDamage += (attacker) => { ctx.wasHit = true; ctx.lastAttacker = attacker; };
 
         if (nodes != null && nodes.Count > 0)
         {
@@ -31,7 +38,7 @@ public class AIBrain : MonoBehaviour
 
         ctx.stateTime += Time.deltaTime;
         currentNode.state?.OnUpdate(ctx);
-
+		currentStateName = currentNode.name;
         foreach (var transition in currentNode.transitions)
         {
             if (transition.Evaluate(ctx))
@@ -49,5 +56,39 @@ public class AIBrain : MonoBehaviour
         ctx.auxTimer = 0f;
         currentNode = nodes.Find(n => n.name == nodeName);
         currentNode?.state?.OnEnter(ctx);
+    }
+
+    public void ClearTargetIfMatches(GameObject obj)
+    {
+        if (ctx != null && ctx.target == obj)
+            ctx.target = null;
+    }
+
+    public void DropCarried()
+    {
+        if (ctx == null || ctx.carriedObject == null) return;
+
+        var carried = ctx.carriedObject;
+
+        carried.transform.SetParent(null, true);
+
+        var marker = carried.GetComponent<CarriedMarker>();
+        if (marker != null)
+            Destroy(marker);
+
+        var rb = carried.GetComponent<Rigidbody>();
+        if (rb != null)
+            rb.isKinematic = false;
+
+        var ai = carried.GetComponent<AIBrain>();
+        if (ai != null) ai.enabled = true;
+
+        var player = carried.GetComponent<PlayerController>();
+        if (player != null) player.enabled = true;
+
+        var abilities = carried.GetComponent<AbilitySystem>();
+        if (abilities != null) abilities.enabled = true;
+
+        ctx.carriedObject = null;
     }
 }

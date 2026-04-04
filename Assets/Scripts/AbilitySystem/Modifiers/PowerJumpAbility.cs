@@ -12,7 +12,6 @@ public class PowerJumpAbility : Ability
         jump.jumpForce += bonusForce;
         jump.energyCost += energyCost;
         
-        Debug.Log($"ModifyDash force: {jump.jumpForce}");
     }
 
 }

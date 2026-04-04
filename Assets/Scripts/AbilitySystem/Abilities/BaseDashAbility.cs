@@ -27,7 +27,7 @@ public class BaseDashAbility : Ability
     	if (energy == null) return;
     	
         if (!instance.IsReady()) return;
-		if (!energy.HasEnough(energyCost)) return;
+		if (!energy.HasEnough(dash.energyCost)) return;
 		
 
         var controller = owner.GetComponent<PlayerController>();

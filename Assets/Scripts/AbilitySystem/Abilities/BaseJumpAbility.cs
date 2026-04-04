@@ -20,7 +20,7 @@ public class BaseJumpAbility : Ability
     	
     	var energy = owner.GetComponent<Energy>();
     	if (energy == null) return;
-    	if (!energy.HasEnough(energyCost)) return;
+    	if (!energy.HasEnough(jump.energyCost)) return;
 
     	var controller = owner.GetComponent<CharacterController>();
     	var player = owner.GetComponent<PlayerController>();
@@ -29,6 +29,7 @@ public class BaseJumpAbility : Ability
 
         if (controller.isGrounded)
         {
+        	Debug.Log($"Jump energy cost {jump.energyCost}");
         	energy.Spend(jump.energyCost);
             player.yVelocity = jump.jumpForce;
         }

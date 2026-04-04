@@ -12,4 +12,10 @@ public class AIContext
 
     public float stateTime;
     public float auxTimer;
+    public Vector3 spawnPosition;
+
+    public bool wasHit;
+    public GameObject lastAttacker;
+
+    public GameObject carriedObject;
 }

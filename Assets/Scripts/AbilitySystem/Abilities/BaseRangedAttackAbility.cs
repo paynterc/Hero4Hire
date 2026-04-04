@@ -6,10 +6,9 @@ public class BaseRangedAttackAbility : Ability
     public GameObject projectilePrefab;
     public GameObject muzzleFlashPrefab;
     public AudioClip fireSound;
-
     public float force = 1000f;
 
-    public override void ModifyShot(GameObject owner, AbilityInstance instance, ShotData shot)
+    public override void InitializeShot(GameObject owner, AbilityInstance instance, ShotData shot)
     {
         if (!MatchesSlot(instance, shot.slot)) return;
         
@@ -17,8 +16,10 @@ public class BaseRangedAttackAbility : Ability
         shot.muzzleFlashPrefab = muzzleFlashPrefab;
         shot.fireSound = fireSound;
         shot.force = force;
-        shot.energyCost += energyCost;
+        shot.energyCost = energyCost;
     }
+
+
 
     public override void OnUpdate(GameObject owner, AbilityInstance instance)
     {
@@ -28,14 +29,18 @@ public class BaseRangedAttackAbility : Ability
 
         var energy = owner.GetComponent<Energy>();
         if (energy == null) return;
-
-        float totalCost = system.CalculateShotCost(instance.slot);
-        if (!energy.HasEnough(totalCost)) return;
+		
+		ShotData shot = new ShotData();
+		shot.slot = instance.slot;
+        system.BuildShotDataForSlot(shot);
+        
+        if (!energy.HasEnough(shot.energyCost)) return;
 
         system.Fire(instance.slot);
 
-        energy.Spend(totalCost);
-        instance.TriggerFireRate(0.2f);
+        energy.Spend(shot.energyCost);
+        
+        instance.TriggerFireRate(shot.fireRate);
     }
     
     public override void ModifyProjectile(GameObject owner, AbilityInstance instance, ProjectileData data)
@@ -44,10 +49,10 @@ public class BaseRangedAttackAbility : Ability
 		data.OnHit += (target) =>
 		{
 
-			var health = target.GetComponent<Health>();
+			var health = target.GetComponentInParent<Health>();
 			if (health != null)
 			{
-				health.TakeDamage((int)data.damage);
+				health.TakeDamage((int)data.damage, data.context.owner);
 			}
 		};
 

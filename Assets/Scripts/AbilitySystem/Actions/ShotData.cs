@@ -18,5 +18,6 @@ public class ShotData : IActionData
 	public ActionContext context;
 	public float energyCost = 0f;
 	public int damage = 10;
+	public float fireRate = 0.2f;
 
 }

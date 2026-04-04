@@ -37,7 +37,7 @@ public class AbilityProjectile : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        data.OnHit?.Invoke(other.gameObject);
-        Destroy(gameObject);
+        //data.OnHit?.Invoke(other.gameObject);
+        //Destroy(gameObject);
     }
 }

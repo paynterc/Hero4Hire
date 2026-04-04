@@ -23,7 +23,11 @@ public class LandingExplosionAbility : Ability
         Vector3 position = owner.transform.position;
 
         if (explosionPrefab != null)
-            Instantiate(explosionPrefab, position, Quaternion.identity);
+        {
+        	GameObject obj = Instantiate(explosionPrefab, position, Quaternion.identity);
+			obj.tag = "FX";
+        }
+            
 
         var hits = Physics.OverlapSphere(position, explosionRadius, damageLayers);
         foreach (var hit in hits)

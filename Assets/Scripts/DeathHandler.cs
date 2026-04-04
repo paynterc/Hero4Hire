@@ -14,7 +14,25 @@ public class DeathHandler : MonoBehaviour
     void HandleDeath()
     {
         if (explosionPrefab != null)
-            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        {
+            	//Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+            
+            Collider col = GetComponent<Collider>();
+			if (col != null)
+			{
+				Vector3 pos = new Vector3(
+					col.bounds.center.x,
+					col.bounds.min.y,
+					col.bounds.center.z
+				);
+
+				GameObject obj = Instantiate(explosionPrefab, pos, Quaternion.identity);
+				obj.tag = "FX";
+			}
+        
+        }
+
+            
 
         var animator = GetComponentInChildren<Animator>();
         if (animator != null)
@@ -24,7 +42,11 @@ public class DeathHandler : MonoBehaviour
         if (player != null) player.enabled = false;
 
         var ai = GetComponent<AIBrain>();
-        if (ai != null) ai.enabled = false;
+        if (ai != null)
+        {
+            ai.DropCarried();
+            ai.enabled = false;
+        }
 
         var abilities = GetComponent<AbilitySystem>();
         if (abilities != null) abilities.enabled = false;

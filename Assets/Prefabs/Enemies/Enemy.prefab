@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72be80b69083f4e02b391bf488aeea69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 100
+  maxHealth: 20
   currentHealth: 0
   isInvulnerable: 0
 --- !u!114 &6633206271634899236
@@ -306,6 +306,10 @@ MonoBehaviour:
         rid: 7818319936611680496
       invert: 0
       targetNodeName: ApproachTarget
+    - condition:
+        rid: 995870633243967552
+      invert: 0
+      targetNodeName: ApproachTarget
   - name: ApproachTarget
     state:
       rid: 7818319936611680497
@@ -314,6 +318,10 @@ MonoBehaviour:
         rid: 7818319936611680498
       invert: 0
       targetNodeName: Attack
+    - condition:
+        rid: 995870633243967555
+      invert: 0
+      targetNodeName: Strafe
   - name: Attack
     state:
       rid: 7818319936611680502
@@ -338,20 +346,43 @@ MonoBehaviour:
         rid: 7818319936611680499
       invert: 0
       targetNodeName: ApproachTarget
+  - name: Strafe
+    state:
+      rid: 995870633243967553
+    transitions:
+    - condition:
+        rid: 995870633243967554
+      invert: 0
+      targetNodeName: Searching
   references:
     version: 2
     RefIds:
+    - rid: 995870633243967552
+      type: {class: WasHitCondition, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 995870633243967553
+      type: {class: StrafeState, ns: , asm: Assembly-CSharp}
+      data:
+        direction: 2
+        strafeDistance: 4
+        stoppingDistance: 0.3
+    - rid: 995870633243967554
+      type: {class: DestinationReachedCondition, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 995870633243967555
+      type: {class: WasHitCondition, ns: , asm: Assembly-CSharp}
+      data: 
     - rid: 7818319936611680495
       type: {class: SearchingState, ns: , asm: Assembly-CSharp}
       data:
-        detectionRange: 10
+        detectionRange: 20
         targetLayers:
           serializedVersion: 2
           m_Bits: 64
     - rid: 7818319936611680496
       type: {class: TargetDetectedCondition, ns: , asm: Assembly-CSharp}
       data:
-        range: 10
+        range: 20
         obstacleLayers:
           serializedVersion: 2
           m_Bits: 256
@@ -366,7 +397,7 @@ MonoBehaviour:
     - rid: 7818319936611680499
       type: {class: TargetDetectedCondition, ns: , asm: Assembly-CSharp}
       data:
-        range: 10
+        range: 50
         obstacleLayers:
           serializedVersion: 2
           m_Bits: 256
@@ -377,7 +408,7 @@ MonoBehaviour:
     - rid: 7818319936611680501
       type: {class: TargetDetectedCondition, ns: , asm: Assembly-CSharp}
       data:
-        range: 10
+        range: 50
         obstacleLayers:
           serializedVersion: 2
           m_Bits: 256
