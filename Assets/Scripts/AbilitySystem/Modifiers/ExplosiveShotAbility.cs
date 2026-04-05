@@ -26,17 +26,17 @@ public class ExplosiveShotAbility : Ability
 		data.OnHit += (owner) =>
 		{
 
-			Debug.Log("Start Explosion");
+
 			Vector3 position = owner.transform.position;
 
 			if (explosionPrefab != null)
 				Instantiate(explosionPrefab, position, Quaternion.identity);
-				Debug.Log("Start Explosion Prefab");
+
 
 			var hits = Physics.OverlapSphere(position, explosionRadius, damageLayers);
 			foreach (var hit in hits)
 			{
-				Debug.Log("Start Explosion Hits");
+				// Debug.Log("Start Explosion Hits");
 				if (hit.gameObject == owner) continue;
 
 				var health = hit.GetComponent<Health>();

@@ -16,13 +16,50 @@ MonoBehaviour:
   abilityType: 2
   energyCost: 5
   disableIK: 1
-  damage: 10
-  range: 2
-  attackAngle: 90
+  comboSteps:
+  - animatorTrigger: Punch
+    damage: 5
+    energyCost: 0
+    range: 3
+    attackAngle: 90
+    slashPrefab: {fileID: 3019528760635874749, guid: e2fe760d6d3a84d93974b1b43ad9c96f, type: 3}
+    slashXPos: -1
+    slashYPos: 1
+    slashZPos: -1
+    slashXRot: -90
+    slashYRot: 0
+    slashZRot: 90
+    slashScale: 50
+  - animatorTrigger: Punch2
+    damage: 5
+    energyCost: 0
+    range: 3
+    attackAngle: 120
+    slashPrefab: {fileID: 3019528760635874749, guid: e2fe760d6d3a84d93974b1b43ad9c96f, type: 3}
+    slashXPos: -1
+    slashYPos: 1
+    slashZPos: 1
+    slashXRot: -90
+    slashYRot: 0
+    slashZRot: 180
+    slashScale: 50
+  - animatorTrigger: Punch3
+    damage: 5
+    energyCost: 0
+    range: 3
+    attackAngle: 90
+    slashPrefab: {fileID: 3019528760635874749, guid: e2fe760d6d3a84d93974b1b43ad9c96f, type: 3}
+    slashXPos: 0.5
+    slashYPos: 1
+    slashZPos: 0.5
+    slashXRot: 90
+    slashYRot: 0
+    slashZRot: -90
+    slashScale: 50
   attackRate: 0.5
+  comboResetTime: 1.5
   targetLayers:
     serializedVersion: 2
     m_Bits: 8
   attackSound: {fileID: 0}
-  attackAnimatorTrigger: Punch
   useAnimationEvents: 0

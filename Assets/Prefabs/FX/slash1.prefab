@@ -81,5 +81,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd976bf1261a649c0893bde58afa3741, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlashFX
-  lifetime: 0.25
-  growSpeed: 80
+  lifetime: 0.15
+  growSpeed: 300
