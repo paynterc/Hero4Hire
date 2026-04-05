@@ -7,6 +7,10 @@ public class ExplosiveShotAbility : Ability
     public float explosionRadius = 5f;
     public int explosionDamage = 50;
     public LayerMask damageLayers;
+    [Tooltip("Orient the explosion to face back toward the direction the projectile came from.")]
+    public bool orientToImpact = false;
+    [Tooltip("The local axis of the explosion prefab that should point back toward the attacker. Y for effects that emit upward, Z for effects that emit forward.")]
+    public Vector3 effectOriginAxis = Vector3.up;
     
     
     public override void ModifyShot(GameObject owner, AbilityInstance instance, ShotData data)
@@ -23,27 +27,38 @@ public class ExplosiveShotAbility : Ability
         
         
         if (!MatchesSlot(instance, data.slot)) return;
-		data.OnHit += (owner) =>
+		data.OnHit += (target, hitPoint, hitDir) =>
 		{
-
-
-			Vector3 position = owner.transform.position;
-
+		
 			if (explosionPrefab != null)
-				Instantiate(explosionPrefab, position, Quaternion.identity);
+			{
+				Quaternion rot = orientToImpact && hitDir != Vector3.zero
+					? Quaternion.FromToRotation(effectOriginAxis, -hitDir)
+					: Quaternion.identity;
 
+				GameObject obj = Instantiate(explosionPrefab, hitPoint, rot);
+				obj.tag = "FX";
 
-			var hits = Physics.OverlapSphere(position, explosionRadius, damageLayers);
+				// Force local simulation space so particle systems respect the rotation
+				if (orientToImpact)
+				{
+					foreach (var ps in obj.GetComponentsInChildren<ParticleSystem>())
+					{
+						var main = ps.main;
+						main.simulationSpace = ParticleSystemSimulationSpace.Local;
+					}
+				}
+			}
+
+			var hits = Physics.OverlapSphere(hitPoint, explosionRadius, damageLayers);
 			foreach (var hit in hits)
 			{
-				// Debug.Log("Start Explosion Hits");
-				if (hit.gameObject == owner) continue;
+				if (hit.gameObject == target) continue;
 
-				var health = hit.GetComponent<Health>();
+				var health = hit.GetComponentInParent<Health>();
 				if (health != null)
 					health.TakeDamage(explosionDamage);
 			}
-
 		};
 
         

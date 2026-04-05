@@ -12,7 +12,7 @@ public class ProjectileData
 
 
     
-    public Action<GameObject> OnHit;
+    public Action<GameObject, Vector3, Vector3> OnHit;
     public Action<GameObject> OnSpawn;
     public float energyCost = 0f;
 }

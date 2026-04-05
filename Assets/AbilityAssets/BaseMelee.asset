@@ -30,6 +30,7 @@ MonoBehaviour:
     slashYRot: 0
     slashZRot: 90
     slashScale: 50
+    impactPrefab: {fileID: 1879272669879180, guid: 52baafc6c69151e418a228e14e1bd356, type: 3}
   - animatorTrigger: Punch2
     damage: 5
     energyCost: 0
@@ -43,6 +44,7 @@ MonoBehaviour:
     slashYRot: 0
     slashZRot: 180
     slashScale: 50
+    impactPrefab: {fileID: 1879272669879180, guid: 52baafc6c69151e418a228e14e1bd356, type: 3}
   - animatorTrigger: Punch3
     damage: 5
     energyCost: 0
@@ -56,10 +58,11 @@ MonoBehaviour:
     slashYRot: 0
     slashZRot: -90
     slashScale: 50
+    impactPrefab: {fileID: 1879272669879180, guid: 52baafc6c69151e418a228e14e1bd356, type: 3}
   attackRate: 0.5
   comboResetTime: 1.5
   targetLayers:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 264
   attackSound: {fileID: 0}
   useAnimationEvents: 0

@@ -19,6 +19,7 @@ public class MeleeComboStep
     public float slashYRot = 0f;
     public float slashZRot = 0f;
     public float slashScale = 1f;
+    public GameObject impactPrefab;
 }
 
 [CreateAssetMenu(menuName = "Abilities/Base Melee Attack")]
@@ -61,6 +62,7 @@ public class BaseMeleeAttackAbility : Ability
         melee.attackAngle = step.attackAngle;
         melee.energyCost = step.energyCost;
         melee.targetLayers = targetLayers;
+        melee.impactPrefab = step.impactPrefab;
     }
 
     public override void OnUpdate(GameObject owner, AbilityInstance instance)
@@ -137,6 +139,13 @@ public class BaseMeleeAttackAbility : Ability
             {
                 health.TakeDamage((int)melee.damage, melee.context?.owner);
                 melee.OnHit?.Invoke(hit.gameObject);
+
+                
+            }
+            if (melee.impactPrefab != null)
+            {
+                Vector3 impactPos = hit.ClosestPoint(origin.position);
+                UnityEngine.Object.Instantiate(melee.impactPrefab, impactPos, Quaternion.LookRotation(-toTarget));
             }
         }
     }

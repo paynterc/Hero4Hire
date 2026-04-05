@@ -19,7 +19,7 @@ public class AbilityProjectile : MonoBehaviour
 
     void OnHit(GameObject target)
     {
-        data.OnHit?.Invoke(target);
+        data.OnHit?.Invoke(target, transform.position, transform.forward);
     }
 
     void Update()
@@ -31,7 +31,8 @@ public class AbilityProjectile : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        data.OnHit?.Invoke(collision.gameObject);
+        Vector3 hitPoint = collision.contacts.Length > 0 ? collision.contacts[0].point : transform.position;
+        data.OnHit?.Invoke(collision.gameObject, hitPoint, transform.forward);
         Destroy(gameObject);
     }
 

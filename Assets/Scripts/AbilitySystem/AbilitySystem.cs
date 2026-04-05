@@ -184,7 +184,7 @@ public class AbilitySystem : MonoBehaviour
 					// Optional hook
 				},
 
-				OnHit = (target) =>
+				OnHit = (target, hitPoint, hitDir) =>
 				{
 					// Future: apply damage here
 				},

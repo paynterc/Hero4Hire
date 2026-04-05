@@ -46,14 +46,11 @@ public class BaseRangedAttackAbility : Ability
     public override void ModifyProjectile(GameObject owner, AbilityInstance instance, ProjectileData data)
     {
         if (!MatchesSlot(instance, data.slot)) return;
-		data.OnHit += (target) =>
+		data.OnHit += (target, hitPoint, hitDir) =>
 		{
-
 			var health = target.GetComponentInParent<Health>();
 			if (health != null)
-			{
 				health.TakeDamage((int)data.damage, data.context.owner);
-			}
 		};
 
     }

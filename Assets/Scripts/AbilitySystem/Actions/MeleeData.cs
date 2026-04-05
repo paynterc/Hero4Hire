@@ -10,5 +10,6 @@ public class MeleeData : IActionData
     public float energyCost = 0f;
     public LayerMask targetLayers;
     public ActionContext context;
+    public GameObject impactPrefab;
     public Action<GameObject> OnHit;
 }
