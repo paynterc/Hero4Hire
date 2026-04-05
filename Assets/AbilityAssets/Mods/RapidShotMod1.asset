@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8857874f1644e42afa79157a8ac9a5e4, type: 3}
   m_Name: RapidShotMod1
   m_EditorClassIdentifier: Assembly-CSharp::RapidShotAbility
-  abilityName: 
-  abilityType: 0
+  abilityName: Rapid Shot 1
+  abilityType: 1
   energyCost: 20
-  reduceFireRate: 0.05
+  reduceFireRate: 0.1

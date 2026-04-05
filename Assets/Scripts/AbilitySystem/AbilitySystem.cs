@@ -252,6 +252,32 @@ public class AbilitySystem : MonoBehaviour
 		}
 	}
 
+	public bool IsIKActive()
+	{
+		foreach (var ability in abilities)
+		{
+			if (IsHeld(ability.slot) && !ability.ability.disableIK)
+				return true;
+		}
+		return false;
+	}
+
+	public void TriggerMeleeHit(ActionSlot slot)
+	{
+		var melee = new MeleeData
+		{
+			slot = slot,
+			context = new ActionContext { owner = gameObject, timestamp = Time.time }
+		};
+
+		foreach (var ability in abilities)
+			ability.ability.InitializeMelee(gameObject, ability, melee);
+		foreach (var ability in abilities)
+			ability.ability.ModifyMelee(gameObject, ability, melee);
+		foreach (var ability in abilities)
+			ability.ability.OnMeleeHit(gameObject, ability, melee);
+	}
+
 	bool HasBaseInSlot(ActionSlot slot, AbilityType type)
 	{
 		return abilities.Any(a =>

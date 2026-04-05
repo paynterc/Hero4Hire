@@ -4,8 +4,12 @@ using UnityEngine;
 [Serializable]
 public class AttackingState : AIState
 {
+    public enum AttackType { Ranged, Melee }
+
     public ActionSlot attackSlot = ActionSlot.Primary;
     public float attackInterval = 1f;
+    public AttackType attackType = AttackType.Ranged;
+    public string meleeAnimatorTrigger = "Attack";
 
     public override void OnEnter(AIContext ctx)
     {
@@ -28,7 +32,18 @@ public class AttackingState : AIState
         if (ctx.auxTimer >= attackInterval)
         {
             ctx.auxTimer = 0f;
-            ctx.abilitySystem?.Fire(attackSlot);
+
+            if (attackType == AttackType.Melee)
+            {
+                if (!string.IsNullOrEmpty(meleeAnimatorTrigger))
+                    ctx.owner.GetComponentInChildren<Animator>()?.SetTrigger(meleeAnimatorTrigger);
+
+                ctx.abilitySystem?.TriggerMeleeHit(attackSlot);
+            }
+            else
+            {
+                ctx.abilitySystem?.Fire(attackSlot);
+            }
         }
     }
 }

@@ -19,9 +19,7 @@ public class PlayerIK : MonoBehaviour
 
     void Update()
     {
-        bool isFiring = abilitySystem != null &&
-            (abilitySystem.IsHeld(ActionSlot.Primary) ||
-             abilitySystem.IsHeld(ActionSlot.Secondary));
+        bool isFiring = abilitySystem != null && abilitySystem.IsIKActive();
 
         float targetWeight = isFiring ? 1f : 0f;
         ikWeight = Mathf.Lerp(ikWeight, targetWeight, blendSpeed * Time.deltaTime);

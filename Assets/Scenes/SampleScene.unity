@@ -2339,6 +2339,10 @@ MonoBehaviour:
     slot: 3
   - ability: {fileID: 11400000, guid: 527e06da6733345c285db23c7398975a, type: 2}
     slot: 2
+  - ability: {fileID: 11400000, guid: 5ef3349f6e7b14aeb87cac92aa424beb, type: 2}
+    slot: 0
+  - ability: {fileID: 11400000, guid: 64843b7f060f548569bb2930b13b8590, type: 2}
+    slot: 1
   firePoint: {fileID: 864663841}
 --- !u!114 &897372305
 MonoBehaviour:

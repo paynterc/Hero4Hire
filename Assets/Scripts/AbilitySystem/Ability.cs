@@ -4,6 +4,8 @@ public enum AbilityType
 {
     AttackBase,
     AttackModifier,
+    MeleeBase,
+    MeleeModifier,
     DashBase,
     DashModifier,
     JumpBase,
@@ -29,6 +31,7 @@ public abstract class Ability : ScriptableObject
     public string abilityName;
     public AbilityType abilityType;
 	public float energyCost = 20f;
+    public bool disableIK = false;
 
     public virtual void OnEquip(GameObject owner, AbilityInstance instance) { }
     public virtual void OnUnequip(GameObject owner, AbilityInstance instance) { }
@@ -69,4 +72,8 @@ public abstract class Ability : ScriptableObject
         AbilityInstance instance,
         ProjectileData projectile
     ) { }
+
+    public virtual void InitializeMelee(GameObject owner, AbilityInstance instance, MeleeData melee) { }
+    public virtual void ModifyMelee(GameObject owner, AbilityInstance instance, MeleeData melee) { }
+    public virtual void OnMeleeHit(GameObject owner, AbilityInstance instance, MeleeData melee) { }
 }
