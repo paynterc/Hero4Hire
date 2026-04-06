@@ -18,4 +18,5 @@ public class AIContext
     public GameObject lastAttacker;
 
     public GameObject carriedObject;
+    public Animator animator;
 }

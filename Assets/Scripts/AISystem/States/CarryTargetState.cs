@@ -46,6 +46,14 @@ public class CarryTargetState : AIState
 
     void SetComponentsEnabled(GameObject go, bool enabled)
     {
+        
+        var navAgent = go.GetComponent<UnityEngine.AI.NavMeshAgent>();
+        if (navAgent != null)
+        {
+            if (!enabled) navAgent.ResetPath();
+            navAgent.enabled = enabled;
+        }
+        
         var ai = go.GetComponent<AIBrain>();
         if (ai != null) ai.enabled = enabled;
 
@@ -54,5 +62,7 @@ public class CarryTargetState : AIState
 
         var abilities = go.GetComponent<AbilitySystem>();
         if (abilities != null) abilities.enabled = enabled;
+        
+
     }
 }

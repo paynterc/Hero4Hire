@@ -10,6 +10,7 @@ public class AIBrain : MonoBehaviour
 
     private AIStateNode currentNode;
     private AIContext ctx;
+    private Animator animator;
 
     void Start()
     {
@@ -18,7 +19,8 @@ public class AIBrain : MonoBehaviour
             owner = gameObject,
             agent = GetComponent<NavMeshAgent>(),
             abilitySystem = GetComponent<AbilitySystem>(),
-            spawnPosition = transform.position
+            spawnPosition = transform.position,
+            animator = GetComponent<Animator>()
         };
 
         var health = GetComponent<Health>();
@@ -30,6 +32,7 @@ public class AIBrain : MonoBehaviour
             currentNode = nodes[0];
             currentNode.state?.OnEnter(ctx);
         }
+
     }
 
     void Update()
@@ -47,6 +50,11 @@ public class AIBrain : MonoBehaviour
                 break;
             }
         }
+		float speed = ctx.agent.velocity.magnitude;
+    	if(ctx.animator)
+    	{
+			ctx.animator.SetFloat("Speed", speed);        
+    	}
     }
 
     void TransitionTo(string nodeName)
@@ -79,6 +87,9 @@ public class AIBrain : MonoBehaviour
         var rb = carried.GetComponent<Rigidbody>();
         if (rb != null)
             rb.isKinematic = false;
+
+        var navAgent = carried.GetComponent<NavMeshAgent>();
+        if (navAgent != null) navAgent.enabled = true;
 
         var ai = carried.GetComponent<AIBrain>();
         if (ai != null) ai.enabled = true;
