@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d315420fc2a934165bdf9fda1ba8e4b4, type: 3}
   m_Name: DamageOverTime
   m_EditorClassIdentifier: Assembly-CSharp::DamageOverTimeAbility
-  abilityName: 
-  abilityType: 0
-  energyCost: 20
-  disableIK: 0
+  abilityName: Poison DOT
+  abilityType: 1
+  energyCost: 5
+  disableIK: 1
   damagePerTick: 5
   tickInterval: 1
   duration: 5
-  stackable: 0
+  stackable: 1
+  effectPrefab: {fileID: 4219719218215338219, guid: 2c57a3a597876466cac410d766bc27ce, type: 3}

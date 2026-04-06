@@ -262,6 +262,39 @@ public class AbilitySystem : MonoBehaviour
 		return false;
 	}
 
+	public void TriggerShield(ActionSlot slot)
+	{
+		var data = new ShieldData
+		{
+			slot = slot,
+			context = new ActionContext { owner = gameObject, timestamp = Time.time }
+		};
+
+		foreach (var ability in abilities)
+			ability.ability.InitializeShield(gameObject, ability, data);
+		foreach (var ability in abilities)
+			ability.ability.ModifyShield(gameObject, ability, data);
+
+		if (data.shieldPrefab == null) return;
+
+		// Destroy any existing shield first
+		var existing = GetComponentInChildren<ShieldInstance>();
+		if (existing != null)
+			Destroy(existing.gameObject);
+
+		var shieldObj = Instantiate(data.shieldPrefab, transform.position + Vector3.up * data.yOffset, Quaternion.identity, transform);
+		shieldObj.transform.localScale = Vector3.one * data.radius;
+
+		var shield = shieldObj.GetComponent<ShieldInstance>();
+		if (shield == null)
+			shield = shieldObj.AddComponent<ShieldInstance>();
+
+		shield.Initialize(data, gameObject);
+
+		foreach (var ability in abilities)
+			ability.ability.OnActivateShield(gameObject, ability, shield);
+	}
+
 	public void TriggerMeleeHit(ActionSlot slot)
 	{
 		var melee = new MeleeData

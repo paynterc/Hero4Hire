@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RapidShotAbility
   abilityName: Rapid Shot 1
   abilityType: 1
-  energyCost: 20
-  reduceFireRate: 0.1
+  energyCost: 0.25
+  disableIK: 0
+  reduceFireRatePct: 25

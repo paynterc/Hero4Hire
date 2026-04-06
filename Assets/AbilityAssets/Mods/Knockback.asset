@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 056a10a7ff11e4d1c93a62f0cf3fa148, type: 3}
   m_Name: Knockback
   m_EditorClassIdentifier: Assembly-CSharp::KnockbackAbility
-  abilityName: 
-  abilityType: 0
-  energyCost: 20
+  abilityName: Knockback
+  abilityType: 1
+  energyCost: 2
   disableIK: 0
   force: 10
   duration: 0.3

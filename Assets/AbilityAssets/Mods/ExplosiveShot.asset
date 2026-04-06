@@ -14,10 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExplosiveShotAbility
   abilityName: Explosive Shot
   abilityType: 0
-  energyCost: 60
-  explosionPrefab: {fileID: 1000012903210382, guid: d750af61c62eb2140b5bfda6bafa9e6f, type: 3}
+  energyCost: 5
+  disableIK: 0
+  explosionPrefab: {fileID: 1000012903210382, guid: 59018c0b9610a144f9d140f595ea5d62, type: 3}
   explosionRadius: 5
-  explosionDamage: 50
+  explosionDamage: 10
   damageLayers:
     serializedVersion: 2
     m_Bits: 8
+  orientToImpact: 1
+  effectOriginAxis: {x: 0, y: 1, z: 0}

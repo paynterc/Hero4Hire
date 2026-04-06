@@ -64,9 +64,10 @@ public class PlayerController : MonoBehaviour
 		if (Input.GetButtonDown("Jump"))
         {
 			abilitySystem.TriggerJump(ActionSlot.Jump);
-
 		}
-		
+
+        abilitySystem.SetHeld(ActionSlot.Action1, Input.GetKey(KeyCode.E));
+
         Vector3 move = overrideMovement ? externalVelocity : currentMove;
 
 		Vector3 finalMove = move + Vector3.up * yVelocity;

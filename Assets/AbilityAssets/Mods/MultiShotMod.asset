@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MultiShotAbility
   abilityName: 
   abilityType: 1
-  energyCost: 5
+  energyCost: 1
+  disableIK: 0
   extraProjectiles: 1

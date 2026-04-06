@@ -6,6 +6,8 @@ public enum AbilityType
     AttackModifier,
     MeleeBase,
     MeleeModifier,
+    ShieldBase,
+    ShieldModifier,
     DashBase,
     DashModifier,
     JumpBase,
@@ -76,4 +78,8 @@ public abstract class Ability : ScriptableObject
     public virtual void InitializeMelee(GameObject owner, AbilityInstance instance, MeleeData melee) { }
     public virtual void ModifyMelee(GameObject owner, AbilityInstance instance, MeleeData melee) { }
     public virtual void OnMeleeHit(GameObject owner, AbilityInstance instance, MeleeData melee) { }
+
+    public virtual void InitializeShield(GameObject owner, AbilityInstance instance, ShieldData data) { }
+    public virtual void ModifyShield(GameObject owner, AbilityInstance instance, ShieldData data) { }
+    public virtual void OnActivateShield(GameObject owner, AbilityInstance instance, ShieldInstance shield) { }
 }

@@ -33,4 +33,9 @@ public class Energy : MonoBehaviour
         currentEnergy -= amount;
         currentEnergy = Mathf.Max(0f, currentEnergy);
     }
+
+    public void Add(float amount)
+    {
+        currentEnergy = Mathf.Min(currentEnergy + amount, maxEnergy);
+    }
 }
