@@ -8,10 +8,12 @@ public class CarryTargetState : AIState
 
     private Transform originalParent;
     private bool rbWasKinematic;
+    private AIContext thisCtx;
 
     public override void OnEnter(AIContext ctx)
     {
         if (ctx.target == null) return;
+        thisCtx = ctx;
 
         ctx.carriedObject = ctx.target;
 
@@ -61,7 +63,17 @@ public class CarryTargetState : AIState
         if (player != null) player.enabled = enabled;
 
         var abilities = go.GetComponent<AbilitySystem>();
-        if (abilities != null) abilities.enabled = enabled;
+        if (abilities != null)
+        {
+        	abilities.enabled = enabled;
+        } 
+        
+        var ikHandler = thisCtx.owner.GetComponent<IKHandler>();
+        if(ikHandler != null){
+        	ikHandler.ikOn = !enabled;
+        }else{
+        	Debug.Log("No IK Handler");
+        }
         
 
     }

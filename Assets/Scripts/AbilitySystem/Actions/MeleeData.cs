@@ -12,4 +12,5 @@ public class MeleeData : IActionData
     public ActionContext context;
     public GameObject impactPrefab;
     public Action<GameObject> OnHit;
+    public float attackRate = .5f;
 }

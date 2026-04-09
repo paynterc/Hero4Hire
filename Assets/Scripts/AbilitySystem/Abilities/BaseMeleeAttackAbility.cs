@@ -63,10 +63,17 @@ public class BaseMeleeAttackAbility : Ability
         melee.energyCost = step.energyCost;
         melee.targetLayers = targetLayers;
         melee.impactPrefab = step.impactPrefab;
+        melee.attackRate = attackRate;
     }
 
     public override void OnUpdate(GameObject owner, AbilityInstance instance)
     {
+        
+        var system = owner.GetComponent<AbilitySystem>();
+        MeleeData data = new MeleeData();
+		data.slot = instance.slot;
+        system.BuildMeleeDataForSlot(data);
+        
         // Tick combo reset timer
         if (comboTimers.TryGetValue(instance, out float t))
         {
@@ -76,7 +83,6 @@ public class BaseMeleeAttackAbility : Ability
                 comboIndices[instance] = 0;
         }
 
-        var system = owner.GetComponent<AbilitySystem>();
         if (!system.IsHeld(instance.slot)) return;
         if (!instance.CanFire()) return;
         if (comboSteps.Count == 0) return;
@@ -88,7 +94,7 @@ public class BaseMeleeAttackAbility : Ability
         if (energy == null || !energy.HasEnough(step.energyCost)) return;
 
         energy.Spend(step.energyCost);
-        instance.TriggerFireRate(attackRate);
+        instance.TriggerFireRate(data.attackRate);
 
         // Store step so InitializeMelee can read it
         pendingSteps[instance] = step;

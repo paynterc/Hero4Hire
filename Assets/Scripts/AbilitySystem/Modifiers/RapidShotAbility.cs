@@ -11,4 +11,10 @@ public class RapidShotAbility : Ability
     	if (!MatchesSlot(instance, shot.slot)) return;
         shot.fireRate *= (1f - reduceFireRatePct/100f);
     }
+    
+    public override void ModifyMelee(GameObject owner, AbilityInstance instance, MeleeData melee)
+    {
+        if (!MatchesSlot(instance, melee.slot)) return;
+        melee.attackRate  *= (1f - reduceFireRatePct/100f);
+    }
 }

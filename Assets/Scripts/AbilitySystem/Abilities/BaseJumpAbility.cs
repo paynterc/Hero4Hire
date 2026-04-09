@@ -22,12 +22,10 @@ public class BaseJumpAbility : Ability
     	if (energy == null) return;
     	if (!energy.HasEnough(jump.energyCost)) return;
 
-    	var controller = owner.GetComponent<CharacterController>();
     	var player = owner.GetComponent<PlayerController>();
 
 
-
-        if (controller.isGrounded)
+        if (player.isGrounded)
         {
         	Debug.Log($"Jump energy cost {jump.energyCost}");
         	energy.Spend(jump.energyCost);

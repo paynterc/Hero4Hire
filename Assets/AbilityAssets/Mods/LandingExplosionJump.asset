@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LandingExplosionAbility
   abilityName: Explosive Landing
   abilityType: 5
-  energyCost: 30
+  energyCost: 5
+  disableIK: 0
   explosionPrefab: {fileID: 1000012903210382, guid: 5b513ede89b81dd4e8dab0e704c70655, type: 3}
   explosionRadius: 5
-  explosionDamage: 50
+  explosionDamage: 2
   damageLayers:
     serializedVersion: 2
     m_Bits: 8

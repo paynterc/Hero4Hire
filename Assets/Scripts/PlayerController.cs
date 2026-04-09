@@ -9,7 +9,9 @@ public class PlayerController : MonoBehaviour
     public float gravity = -20f;
     public float rotationSpeed = 15f;
     public bool justLanded = true;
-    public bool isGroundedDebug;
+    public bool isGrounded;
+    public float groundCheckRadius = 0.2f;
+    public LayerMask groundLayer;
 
     private CharacterController controller;
     private AbilitySystem abilitySystem;
@@ -22,7 +24,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public Vector3 externalVelocity;
 	[HideInInspector] public bool overrideMovement = false;
 	[HideInInspector] public Vector3 lastMoveDirection;
-    [HideInInspector] public float yVelocity;
+    public float yVelocity;
 
 
     void Start()
@@ -35,11 +37,16 @@ public class PlayerController : MonoBehaviour
 
     }
     
+    
 
     void Update()
     {
     
-    	isGroundedDebug = controller.isGrounded;
+    	isGrounded = Physics.CheckSphere(
+			transform.position,
+			groundCheckRadius,
+			groundLayer
+		);
     	if (!overrideMovement)
 		{
        		HandleRotation();
@@ -74,10 +81,10 @@ public class PlayerController : MonoBehaviour
 
         controller.Move(finalMove * Time.deltaTime);
 
-        if (controller.isGrounded)
-            groundedTimer = groundedGraceTime;
-        else
-            groundedTimer -= Time.deltaTime;
+        //if (isGrounded)
+            //groundedTimer = groundedGraceTime;
+        //else
+            //groundedTimer -= Time.deltaTime;
 
         float moveX = currentMove.magnitude > 0.01f
             ? Vector3.Dot(currentMove.normalized, transform.right)
@@ -85,7 +92,7 @@ public class PlayerController : MonoBehaviour
 
         animator?.SetFloat("Speed", currentMove.magnitude);
         animator?.SetFloat("MoveX", moveX);
-        animator?.SetBool("IsGrounded", groundedTimer > 0f);
+        animator?.SetBool("IsGrounded", isGrounded);
     }
 
 	void HandleRotation()
@@ -157,7 +164,7 @@ public class PlayerController : MonoBehaviour
 
     void HandleGravity()
     {
-        if (controller.isGrounded)
+        if (isGrounded)
         {
             if (yVelocity < 0){
             	yVelocity = -2f;

@@ -101,5 +101,11 @@ public class AIBrain : MonoBehaviour
         if (abilities != null) abilities.enabled = true;
 
         ctx.carriedObject = null;
+        
+        var ikHandler = GetComponent<IKHandler>();
+        if(ikHandler != null){
+        	ikHandler.ikOn = false;
+        }
+        
     }
 }

@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PowerDashAbility
   abilityName: Power Dash
   abilityType: 3
-  energyCost: 20
-  slot: 3
+  energyCost: 5
+  disableIK: 0
   bonusForce: 20

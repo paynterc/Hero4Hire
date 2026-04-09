@@ -228,6 +228,17 @@ public class AbilitySystem : MonoBehaviour
 	
 	}
 	
+	// ShotData should have the slot already added before you run these modifiers
+	public void BuildMeleeDataForSlot(MeleeData data)
+	{
+	
+		foreach (var ability in abilities)
+			ability.ability.InitializeMelee(gameObject, ability, data);		
+		foreach (var ability in abilities)
+			ability.ability.ModifyMelee(gameObject, ability, data);
+	
+	}
+	
 		
 	public float CalculateShotCost(ActionSlot slot)
 	{
