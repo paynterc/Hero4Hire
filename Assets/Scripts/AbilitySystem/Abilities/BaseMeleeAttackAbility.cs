@@ -70,9 +70,11 @@ public class BaseMeleeAttackAbility : Ability
     {
         
         var system = owner.GetComponent<AbilitySystem>();
-        MeleeData data = new MeleeData();
-		data.slot = instance.slot;
-        system.BuildMeleeDataForSlot(data);
+        MeleeData data = system.GetData<MeleeData>(instance.slot);
+        //MeleeData data = new MeleeData();
+		//data.slot = instance.slot;
+        //system.BuildMeleeDataForSlot(data);
+
         
         // Tick combo reset timer
         if (comboTimers.TryGetValue(instance, out float t))

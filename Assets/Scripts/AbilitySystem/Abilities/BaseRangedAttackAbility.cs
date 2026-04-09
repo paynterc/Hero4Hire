@@ -30,9 +30,9 @@ public class BaseRangedAttackAbility : Ability
         var energy = owner.GetComponent<Energy>();
         if (energy == null) return;
 		
-		ShotData shot = new ShotData();
-		shot.slot = instance.slot;
-        system.BuildShotDataForSlot(shot);
+		ShotData shot = system.GetData<ShotData>(instance.slot);
+		// shot.slot = instance.slot;
+        // system.BuildShotDataForSlot(shot);
         
         if (!energy.HasEnough(shot.energyCost)) return;
 

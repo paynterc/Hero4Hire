@@ -15,9 +15,13 @@ public class AbilitySystem : MonoBehaviour
     public Transform firePoint;
 
     private List<AbilityInstance> abilities = new List<AbilityInstance>();
-    
+
     private Dictionary<ActionSlot, bool> heldInputs = new Dictionary<ActionSlot, bool>();
 
+    private Dictionary<(System.Type, ActionSlot), (object data, int frame)> dataCache
+        = new Dictionary<(System.Type, ActionSlot), (object data, int frame)>();
+    private Dictionary<System.Type, System.Func<ActionSlot, object>> dataBuilders
+        = new Dictionary<System.Type, System.Func<ActionSlot, object>>();
 
     void Start()
     {
@@ -27,6 +31,68 @@ public class AbilitySystem : MonoBehaviour
             abilities.Add(instance);
             binding.ability.OnEquip(gameObject, instance);
         }
+
+        RegisterBuilder<ShotData>(slot =>
+        {
+            var d = new ShotData { slot = slot, context = new ActionContext { owner = gameObject } };
+            foreach (var a in abilities) a.ability.InitializeShot(gameObject, a, d);
+            foreach (var a in abilities) a.ability.ModifyShot(gameObject, a, d);
+            return d;
+        });
+
+        RegisterBuilder<MeleeData>(slot =>
+        {
+            var d = new MeleeData { slot = slot, context = new ActionContext { owner = gameObject } };
+            foreach (var a in abilities) a.ability.InitializeMelee(gameObject, a, d);
+            foreach (var a in abilities) a.ability.ModifyMelee(gameObject, a, d);
+            return d;
+        });
+
+        RegisterBuilder<JumpData>(slot =>
+        {
+            var d = new JumpData { slot = slot };
+            foreach (var a in abilities) a.ability.InitializeJump(gameObject, a, d);
+            foreach (var a in abilities) a.ability.ModifyJump(gameObject, a, d);
+            return d;
+        });
+
+        RegisterBuilder<DashData>(slot =>
+        {
+            var d = new DashData { slot = slot };
+            foreach (var a in abilities) a.ability.InitializeDash(gameObject, a, d);
+            foreach (var a in abilities) a.ability.ModifyDash(gameObject, a, d);
+            return d;
+        });
+
+        RegisterBuilder<ShieldData>(slot =>
+        {
+            var d = new ShieldData { slot = slot, context = new ActionContext { owner = gameObject } };
+            foreach (var a in abilities) a.ability.InitializeShield(gameObject, a, d);
+            foreach (var a in abilities) a.ability.ModifyShield(gameObject, a, d);
+            return d;
+        });
+    }
+
+    public void RegisterBuilder<T>(System.Func<ActionSlot, T> builder) where T : class
+    {
+        dataBuilders[typeof(T)] = slot => builder(slot);
+    }
+
+    public T GetData<T>(ActionSlot slot) where T : class
+    {
+        var key = (typeof(T), slot);
+        if (dataCache.TryGetValue(key, out var cached) && cached.frame == Time.frameCount)
+            return (T)cached.data;
+
+        if (!dataBuilders.TryGetValue(typeof(T), out var build))
+        {
+            Debug.LogWarning($"[AbilitySystem] No builder registered for {typeof(T).Name}");
+            return null;
+        }
+
+        var data = build(slot);
+        dataCache[key] = (data, Time.frameCount);
+        return (T)data;
     }
     
     public void SetHeld(ActionSlot slot, bool isHeld)
@@ -242,12 +308,7 @@ public class AbilitySystem : MonoBehaviour
 		
 	public float CalculateShotCost(ActionSlot slot)
 	{
-		var shot = new ShotData { slot = slot };
-		foreach (var ability in abilities)
-			ability.ability.InitializeShot(gameObject, ability, shot);		
-		foreach (var ability in abilities)
-			ability.ability.ModifyShot(gameObject, ability, shot);
-		return shot.energyCost;
+		return GetData<ShotData>(slot)?.energyCost ?? 0f;
 	}
 	
 
