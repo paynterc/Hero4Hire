@@ -267,10 +267,10 @@ public class AbilitySystem : MonoBehaviour
 	{
 		foreach (var ability in abilities)
 		{
-			if (IsHeld(ability.slot) && !ability.ability.disableIK)
-				return true;
+			if (IsHeld(ability.slot) && ability.ability.disableIK)
+				return false;
 		}
-		return false;
+		return true;
 	}
 
 	public void TriggerShield(ActionSlot slot)
