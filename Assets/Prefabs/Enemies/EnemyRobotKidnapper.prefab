@@ -237,13 +237,13 @@ MonoBehaviour:
       rid: 995870633243967565
     transitions:
     - condition:
-        rid: 995870633243967566
-      invert: 0
-      targetNodeName: Carry Loot
-    - condition:
         rid: 995870633243967571
       invert: 0
       targetNodeName: Move Random
+    - condition:
+        rid: 995870633243967566
+      invert: 0
+      targetNodeName: Carry Loot
   - name: Carry Loot
     state:
       rid: 995870633243967558
@@ -257,6 +257,10 @@ MonoBehaviour:
       rid: 995870700691259463
     transitions:
     - condition:
+        rid: 995870761215328333
+      invert: 1
+      targetNodeName: Move Random
+    - condition:
         rid: 995870700691259464
       invert: 0
       targetNodeName: Move to Exit
@@ -264,6 +268,10 @@ MonoBehaviour:
     state:
       rid: 995870700691259466
     transitions:
+    - condition:
+        rid: 995870761215328332
+      invert: 1
+      targetNodeName: Move Random
     - condition:
         rid: 995870633243967572
       invert: 0
@@ -348,6 +356,12 @@ MonoBehaviour:
       type: {class: ApproachingState, ns: , asm: Assembly-CSharp}
       data:
         stoppingDistance: 1
+    - rid: 995870761215328332
+      type: {class: IsStillCarryingCondition, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 995870761215328333
+      type: {class: IsStillCarryingCondition, ns: , asm: Assembly-CSharp}
+      data: 
 --- !u!114 &8928122096051168154
 MonoBehaviour:
   m_ObjectHideFlags: 0

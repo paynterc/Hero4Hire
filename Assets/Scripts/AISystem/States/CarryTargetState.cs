@@ -42,8 +42,12 @@ public class CarryTargetState : AIState
 
     public override void OnExit(AIContext ctx)
     {
-        // Drop is handled by DropTargetState — nothing to do here
-        // so transitioning to non-drop states keeps the object attached
+        // If another bot has stolen the carried object, just clear our reference.
+        // DropCarried/DropTargetState handles the full drop in the normal case.
+        if (ctx.carriedObject != null && ctx.carriedObject.transform.parent != ctx.owner.transform)
+        {
+            ctx.carriedObject = null;
+        }
     }
 
     void SetComponentsEnabled(GameObject go, bool enabled)
