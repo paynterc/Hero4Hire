@@ -50,7 +50,7 @@ public class IntervalSpawner : MonoBehaviour
     int GetCountOnLayers()
     {
         int count = 0;
-        GameObject[] allObjects = FindObjectsOfType<GameObject>();
+        GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
 
         foreach (GameObject obj in allObjects)
         {

@@ -8,7 +8,7 @@ public class DropTargetState : AIState
 
     public override void OnEnter(AIContext ctx)
     {
-        if (ctx.carriedObject == null) return;
+        if (ctx.carriedObject == null || ctx.carriedObject.transform.parent != ctx.owner.transform) return;
 
         // Place in front of bot before releasing
         ctx.carriedObject.transform.position = ctx.owner.transform.TransformPoint(dropOffset);

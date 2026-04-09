@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private Vector3 velocity;
     private Vector3 currentMove;
-    private float groundedTimer = 0f;
     private const float groundedGraceTime = 0.1f;
     
     [HideInInspector] public Vector3 externalVelocity;

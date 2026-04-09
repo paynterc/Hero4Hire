@@ -30,7 +30,7 @@ public class Health : MonoBehaviour
 
         currentHealth = Mathf.Max(currentHealth - amount, 0);
 
-        Debug.Log("Took damage: " + amount);
+        Debug.Log($"{gameObject.name} Took damage: " + amount);
 
         OnDamage?.Invoke(attacker);
 

@@ -25,6 +25,8 @@ public class IKHandler : MonoBehaviour
 
     void OnAnimatorIK(int layerIndex)
     {
+        if (animator == null) return;
+
         if (rightHandTarget != null)
         {
             animator.SetIKPositionWeight(AvatarIKGoal.RightHand, ikWeight);

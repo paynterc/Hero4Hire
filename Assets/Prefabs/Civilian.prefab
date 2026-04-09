@@ -867,10 +867,6 @@ GameObject:
   - component: {fileID: 7460092722599157500}
   - component: {fileID: 786617869882675087}
   - component: {fileID: 3431217527743123736}
-  - component: {fileID: 6848300713470106094}
-  - component: {fileID: 5990206433832470446}
-  - component: {fileID: 1492031055979513542}
-  - component: {fileID: 5013395961543500667}
   - component: {fileID: 3222726389744827252}
   - component: {fileID: 8755874454699396957}
   m_Layer: 0
@@ -1026,66 +1022,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 7
   m_ObstacleAvoidanceType: 4
---- !u!114 &6848300713470106094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7370837594231045724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72be80b69083f4e02b391bf488aeea69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 100
-  currentHealth: 0
-  isInvulnerable: 0
-  damageRedirect: {fileID: 0}
---- !u!114 &5990206433832470446
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7370837594231045724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8664f723ddd349d2ae453d2ca5c4d52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Energy
-  maxEnergy: 100
-  currentEnergy: 0
-  regenRate: 10
---- !u!114 &1492031055979513542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7370837594231045724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ea64468ba60949cda64957af154c2df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AbilitySystem
-  startingAbilities: []
-  firePoint: {fileID: 0}
---- !u!114 &5013395961543500667
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7370837594231045724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f98eb849ded394481904dec90be61e27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DeathHandler
-  explosionPrefab: {fileID: 0}
-  deathAnimationTrigger: Death
-  destroyDelay: 3
 --- !u!95 &3222726389744827252
 Animator:
   serializedVersion: 7

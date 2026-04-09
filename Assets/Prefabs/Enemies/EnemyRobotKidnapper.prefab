@@ -241,6 +241,10 @@ MonoBehaviour:
       invert: 0
       targetNodeName: Move Random
     - condition:
+        rid: 995870761215328336
+      invert: 0
+      targetNodeName: Move Random
+    - condition:
         rid: 995870633243967566
       invert: 0
       targetNodeName: Carry Loot
@@ -248,6 +252,10 @@ MonoBehaviour:
     state:
       rid: 995870633243967558
     transitions:
+    - condition:
+        rid: 995870761215328334
+      invert: 1
+      targetNodeName: Move Random
     - condition:
         rid: 995870633243967559
       invert: 0
@@ -283,6 +291,10 @@ MonoBehaviour:
     - condition:
         rid: 995870633243967563
       invert: 0
+      targetNodeName: Move Random
+    - condition:
+        rid: 995870761215328335
+      invert: 1
       targetNodeName: Move Random
   - name: Move Random
     state:
@@ -361,6 +373,15 @@ MonoBehaviour:
       data: 
     - rid: 995870761215328333
       type: {class: IsStillCarryingCondition, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 995870761215328334
+      type: {class: IsStillCarryingCondition, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 995870761215328335
+      type: {class: IsStillCarryingCondition, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 995870761215328336
+      type: {class: TargetIsCarriedByOtherCondition, ns: , asm: Assembly-CSharp}
       data: 
 --- !u!114 &8928122096051168154
 MonoBehaviour:
