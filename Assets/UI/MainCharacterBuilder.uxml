@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/main.uss?fileID=7433441132597879392&amp;guid=d7971f87b69464363bb6ba0f532aa71c&amp;type=3#main"/>
+    <ui:VisualElement name="Panel" class="panel" style="flex-grow: 1;">
+        <ui:VisualElement name="RowContainer" class="row-container" style="flex-grow: 1; align-self: flex-start; align-items: stretch; left: 75%;"/>
+    </ui:VisualElement>
+    <ui:VisualElement name="SkinPallet" class="pallet" style="min-height: auto; top: auto; left: 0; bottom: 0;"/>
+    <ui:VisualElement name="PrimaryPallet" class="pallet" style="top: auto; left: 200px; bottom: 0;"/>
+    <ui:VisualElement name="SecondaryPallet" class="pallet" style="top: auto; left: 400px; bottom: 0;"/>
+    <ui:VisualElement name="AccessoryPallet" class="pallet" style="top: auto; left: 600px; bottom: 0;"/>
+</ui:UXML>

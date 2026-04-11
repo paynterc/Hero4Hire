@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using System.Collections.Generic;
 
 public class CharacterPreview : MonoBehaviour
@@ -18,6 +19,8 @@ public class CharacterPreview : MonoBehaviour
 
     private GameObject[]   bodyPrefabs;
     private GameObject[][] accessoryPrefabs = new GameObject[7][];
+    private Material[]     decalMaterials;
+    private DecalProjector decalProjector;
 
     private GameObject     currentBody;
 
@@ -37,9 +40,11 @@ public class CharacterPreview : MonoBehaviour
             attachPoints[i]       = new List<Transform>();
         }
 
-        bodyPrefabs = Resources.LoadAll<GameObject>("Characters/Body");
+        bodyPrefabs    = Resources.LoadAll<GameObject>("Characters/Body");
+        decalMaterials = Resources.LoadAll<Material>("Characters/Decals");
         for (int i = 0; i < 7; i++)
             accessoryPrefabs[i] = Resources.LoadAll<GameObject>($"Characters/{SlotFolders[i]}");
+
 
         // If no swappable body prefabs, treat this GameObject as the fixed body
         // and find attach points directly on its own hierarchy
@@ -110,6 +115,10 @@ public class CharacterPreview : MonoBehaviour
 
     void RefreshAttachPoints()
     {
+        decalProjector = currentBody.GetComponentInChildren<DecalProjector>();
+        if (decalProjector == null)
+            Debug.LogWarning("[CharacterPreview] No DecalProjector found on body.");
+
         for (int i = 0; i < 7; i++)
         {
             attachPoints[i].Clear();
@@ -196,6 +205,30 @@ public class CharacterPreview : MonoBehaviour
             r.SetPropertyBlock(block);
     }
 
+    // ── Decal ─────────────────────────────────────────────────────────────
+
+    public Material[] GetDecalMaterials() => decalMaterials;
+
+    public void SetDecal(int index)
+    {
+        if (decalProjector == null) return;
+        if (index < 0)
+        {
+            decalProjector.enabled = false;
+            return;
+        }
+        if (decalMaterials == null || index >= decalMaterials.Length) return;
+        decalProjector.enabled  = true;
+        decalProjector.material = decalMaterials[index];
+    }
+
+    public void SetDecalSize(float width, float height)
+    {
+        if (decalProjector == null) return;
+        var s = decalProjector.size;
+        decalProjector.size = new Vector3(width, height, s.z);
+    }
+
     // ── Full config apply ─────────────────────────────────────────────────
 
     public void ApplyConfig(CharacterConfig config, Color[] skinPalette, Color[] primaryPalette, Color[] secondaryPalette, Color[] accessoryPalette)
@@ -205,6 +238,8 @@ public class CharacterPreview : MonoBehaviour
         Color secondary = SafeColor(secondaryPalette, config.secondaryColorIndex);
 
         SetBody(config.bodyIndex, skin, primary, secondary, config, accessoryPalette);
+        SetDecal(config.decalIndex);
+        SetDecalSize(config.decalWidth, config.decalHeight);
     }
 
     Color SafeColor(Color[] palette, int index)

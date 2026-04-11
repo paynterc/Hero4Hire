@@ -68,17 +68,56 @@ public class CharacterCreatorUI : MonoBehaviour
         for (int i = 0; i < SlotLabels.Length; i++)
         {
             int slot = i - 1; // -1 for body, 0-6 for accessories
-
-            var row      = Instantiate(rowPrefab, rowContainer);
-            var texts    = row.GetComponentsInChildren<TMP_Text>();
-            var buttons  = row.GetComponentsInChildren<Button>();
-
-            // Expects prefab layout: [Label TMP_Text] [Back Button] [Forward Button]
-            texts[0].text = SlotLabels[i];
-
-            buttons[0].onClick.AddListener(() => Step(slot, -1));
-            buttons[1].onClick.AddListener(() => Step(slot, +1));
+            AddRow(SlotLabels[i],
+                () => Step(slot, -1),
+                () => Step(slot, +1));
         }
+
+        // Decal material row
+        AddRow("Decal",
+            () => StepDecal(-1),
+            () => StepDecal(+1));
+
+        // Decal size rows
+        AddRow("Decal W",
+            () => StepDecalWidth(-decalSizeStep),
+            () => StepDecalWidth(+decalSizeStep));
+
+        AddRow("Decal H",
+            () => StepDecalHeight(-decalSizeStep),
+            () => StepDecalHeight(+decalSizeStep));
+    }
+
+    void AddRow(string label, System.Action onBack, System.Action onForward)
+    {
+        var row     = Instantiate(rowPrefab, rowContainer);
+        var texts   = row.GetComponentsInChildren<TMP_Text>();
+        var buttons = row.GetComponentsInChildren<Button>();
+        texts[0].text = label;
+        buttons[0].onClick.AddListener(() => onBack());
+        buttons[1].onClick.AddListener(() => onForward());
+    }
+
+    void StepDecal(int direction)
+    {
+        var materials = preview.GetDecalMaterials();
+        int count     = materials != null ? materials.Length : 0;
+        int current   = config.decalIndex + 1;
+        current = Wrap(current + direction, count + 1);
+        config.decalIndex = current - 1;
+        preview.SetDecal(config.decalIndex);
+    }
+
+    void StepDecalWidth(float delta)
+    {
+        config.decalWidth = Mathf.Clamp(config.decalWidth + delta, decalSizeMin, decalSizeMax);
+        preview.SetDecalSize(config.decalWidth, config.decalHeight);
+    }
+
+    void StepDecalHeight(float delta)
+    {
+        config.decalHeight = Mathf.Clamp(config.decalHeight + delta, decalSizeMin, decalSizeMax);
+        preview.SetDecalSize(config.decalWidth, config.decalHeight);
     }
 
     // ── Step forward / back ───────────────────────────────────────────────
@@ -240,6 +279,11 @@ public class CharacterCreatorUI : MonoBehaviour
     [Header("Swatch")]
     public float swatchSize = 40f;
     public Sprite swatchSprite;
+
+    [Header("Decal")]
+    public float decalSizeStep = 0.05f;
+    public float decalSizeMin  = 0.1f;
+    public float decalSizeMax  = 2f;
 
     // Swatch prefab: a GameObject with Image + Button components
     GameObject swatchPrefabInstance;
