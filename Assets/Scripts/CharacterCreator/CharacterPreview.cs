@@ -7,9 +7,6 @@ public class CharacterPreview : MonoBehaviour
     private static readonly string[] SlotFolders =
         { "Hair", "Mask", "Beard", "Helmet", "Back", "Boots", "Gloves" };
 
-    // Attach point names on each body prefab.
-    // For multi-point slots, the body has AttachBoots_0, AttachBoots_1, etc.
-    // Single-point slots just need AttachHair_0 (or AttachHair — both are found).
     private static readonly string[] AttachPointNames =
         { "AttachHair", "AttachMask", "AttachBeard", "AttachHelmet", "AttachBack", "AttachBoots", "AttachGloves" };
 
@@ -24,11 +21,8 @@ public class CharacterPreview : MonoBehaviour
 
     private GameObject     currentBody;
 
-    // Each slot can have multiple spawned instances (e.g. left + right boot)
     private List<GameObject>[] spawnedAccessories;
-
-    // Each slot can have multiple attach points
-    private List<Transform>[] attachPoints;
+    private List<Transform>[]  attachPoints;
 
     void Awake()
     {
@@ -45,9 +39,6 @@ public class CharacterPreview : MonoBehaviour
         for (int i = 0; i < 7; i++)
             accessoryPrefabs[i] = Resources.LoadAll<GameObject>($"Characters/{SlotFolders[i]}");
 
-
-        // If no swappable body prefabs, treat this GameObject as the fixed body
-        // and find attach points directly on its own hierarchy
         if (bodyPrefabs.Length == 0)
         {
             currentBody = gameObject;
@@ -62,7 +53,7 @@ public class CharacterPreview : MonoBehaviour
 
     // ── Body ─────────────────────────────────────────────────────────────
 
-    public void SetBody(int index, Color skin, Color primary, Color secondary, CharacterConfig config, Color[] accessoryPalette)
+    public void SetBody(int index, CharacterConfig config)
     {
         if (currentBody != null) Destroy(currentBody);
         if (bodyPrefabs == null || index < 0 || index >= bodyPrefabs.Length) return;
@@ -70,15 +61,10 @@ public class CharacterPreview : MonoBehaviour
         currentBody = Instantiate(bodyPrefabs[index], transform.position, transform.rotation, transform);
 
         RefreshAttachPoints();
-        ApplyBodyColors(skin, primary, secondary);
+        ApplyBodyColors(config.skinColor, config.primaryColor, config.secondaryColor);
 
-        // Re-apply all accessory selections onto the new body's attach points
         for (int i = 0; i < 7; i++)
-        {
-            Color col = accessoryPalette != null && config.accessoryColorIndices[i] < accessoryPalette.Length
-                ? accessoryPalette[config.accessoryColorIndices[i]] : Color.white;
-            SetAccessory(i, config.accessoryIndices[i], col);
-        }
+            SetAccessory(i, config.accessoryIndices[i], config.accessoryColors[i]);
     }
 
     private Color _lastSkin      = Color.white;
@@ -107,9 +93,9 @@ public class CharacterPreview : MonoBehaviour
         }
     }
 
-    public void ApplySkinColor(Color skin)      => ApplyBodyColors(skin,         _lastPrimary,   _lastSecondary);
-    public void ApplyPrimaryColor(Color color)  => ApplyBodyColors(_lastSkin,    color,          _lastSecondary);
-    public void ApplySecondaryColor(Color color)=> ApplyBodyColors(_lastSkin,    _lastPrimary,   color);
+    public void ApplySkinColor(Color skin)       => ApplyBodyColors(skin,       _lastPrimary,   _lastSecondary);
+    public void ApplyPrimaryColor(Color color)   => ApplyBodyColors(_lastSkin,  color,          _lastSecondary);
+    public void ApplySecondaryColor(Color color) => ApplyBodyColors(_lastSkin,  _lastPrimary,   color);
 
     // ── Attach point discovery ────────────────────────────────────────────
 
@@ -123,7 +109,6 @@ public class CharacterPreview : MonoBehaviour
         {
             attachPoints[i].Clear();
 
-            // Collect AttachXxx_0, AttachXxx_1, ... in order
             int index = 0;
             while (true)
             {
@@ -133,7 +118,6 @@ public class CharacterPreview : MonoBehaviour
                 index++;
             }
 
-            // Fall back to bare name (e.g. AttachHair) if no numbered variants found
             if (attachPoints[i].Count == 0)
             {
                 var t = FindDeep(currentBody.transform, AttachPointNames[i]);
@@ -145,7 +129,6 @@ public class CharacterPreview : MonoBehaviour
         }
     }
 
-    // Depth-first search by name (Transform.Find only searches direct children)
     Transform FindDeep(Transform parent, string name)
     {
         foreach (Transform child in parent)
@@ -161,7 +144,6 @@ public class CharacterPreview : MonoBehaviour
 
     public void SetAccessory(int slotIndex, int prefabIndex, Color color)
     {
-        // Clear existing instances for this slot
         foreach (var go in spawnedAccessories[slotIndex])
             if (go != null) Destroy(go);
         spawnedAccessories[slotIndex].Clear();
@@ -177,12 +159,8 @@ public class CharacterPreview : MonoBehaviour
         for (int p = 0; p < points.Count; p++)
         {
             var point = points[p];
+            var go    = Instantiate(prefabs[prefabIndex], point, false);
 
-            // worldPositionStays=false preserves the prefab's authored local transform
-            // relative to the attach point, so rotation/position offsets are respected
-            var go = Instantiate(prefabs[prefabIndex], point, false);
-
-            // Mirror second (and beyond) instances for paired slots like boots/gloves
             if (p > 0 && MirrorSecond[slotIndex])
                 go.transform.localScale = new Vector3(-1f, 1f, 1f);
 
@@ -222,7 +200,6 @@ public class CharacterPreview : MonoBehaviour
         }
         if (decalMaterials == null || index >= decalMaterials.Length) return;
 
-        // Create a runtime instance so we can tint it without modifying the asset
         if (decalMaterialInstance != null) Destroy(decalMaterialInstance);
         decalMaterialInstance = new Material(decalMaterials[index]);
         decalMaterialInstance.SetColor("_BaseColor", _lastDecalColor);
@@ -235,7 +212,6 @@ public class CharacterPreview : MonoBehaviour
     {
         _lastDecalColor = color;
         if (decalMaterialInstance == null) return;
-
         decalMaterialInstance.SetColor("_TintColor", color);
     }
 
@@ -248,20 +224,11 @@ public class CharacterPreview : MonoBehaviour
 
     // ── Full config apply ─────────────────────────────────────────────────
 
-    public void ApplyConfig(CharacterConfig config, Color[] skinPalette, Color[] colorPalette)
+    public void ApplyConfig(CharacterConfig config)
     {
-        Color skin      = SafeColor(skinPalette,   config.skinColorIndex);
-        Color primary   = SafeColor(colorPalette,  config.primaryColorIndex);
-        Color secondary = SafeColor(colorPalette,  config.secondaryColorIndex);
-
-        SetBody(config.bodyIndex, skin, primary, secondary, config, colorPalette);
+        SetBody(config.bodyIndex, config);
         SetDecal(config.decalIndex);
-        SetDecalColor(SafeColor(colorPalette, config.decalColorIndex));
+        SetDecalColor(config.decalColor);
         SetDecalSize(config.decalWidth, config.decalHeight);
-    }
-
-    Color SafeColor(Color[] palette, int index)
-    {
-        return palette != null && index < palette.Length ? palette[index] : Color.white;
     }
 }

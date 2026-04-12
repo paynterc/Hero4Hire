@@ -8,22 +8,25 @@ public class CharacterConfig
 {
     public string characterName = "Hero";
     public int bodyIndex = 0;
-    public int[] accessoryIndices  = new int[7];
-    public int[] accessoryColorIndices = new int[7];
-    public int skinColorIndex      = 0;
-    public int primaryColorIndex   = 0;
-    public int secondaryColorIndex = 0;
-    public int   decalIndex      = -1;
-    public int   decalColorIndex = 0;
-    public float decalWidth      = 0.5f;
-    public float decalHeight     = 0.5f;
-    public string portraitPath = "";
+    public int[]   accessoryIndices = new int[7];
+    public Color   skinColor        = Color.white;
+    public Color   primaryColor     = Color.white;
+    public Color   secondaryColor   = Color.white;
+    public Color[] accessoryColors  = new Color[7];
+    public Color   decalColor       = Color.white;
+    public int     decalIndex       = -1;
+    public float   decalWidth       = 0.5f;
+    public float   decalHeight      = 0.5f;
+    public string  portraitPath     = "";
 
     public CharacterConfig()
     {
         accessoryIndices = new int[7];
-        accessoryColorIndices = new int[7];
+        accessoryColors  = new Color[7];
         for (int i = 0; i < 7; i++)
+        {
             accessoryIndices[i] = -1;
+            accessoryColors[i]  = Color.white;
+        }
     }
 }

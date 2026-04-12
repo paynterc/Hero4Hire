@@ -14,19 +14,38 @@ public class CharacterCreatorUI : MonoBehaviour
 
     [Header("UI Containers")]
     public Transform rowContainer;
-    public Transform skinPaletteContent;
-    public Transform primaryPaletteContent;
-    public Transform secondaryPaletteContent;
-    public Transform accessoryPaletteContent;
-    public Transform decalPaletteContent;
+
+    [Header("Color Picker")]
+    public FlexibleColorPicker colorPicker;
+
+    [Header("Color Target Buttons")]
+    [Tooltip("Button whose Image shows the current skin color")]
+    public Button skinColorButton;
+    [Tooltip("Button whose Image shows the current primary color")]
+    public Button primaryColorButton;
+    [Tooltip("Button whose Image shows the current secondary color")]
+    public Button secondaryColorButton;
+    [Tooltip("Button whose Image shows the current accessory color")]
+    public Button accessoryColorButton;
+    [Tooltip("Button whose Image shows the current decal color")]
+    public Button decalColorButton;
+
+    [Header("Color Button Groups")]
+    [Tooltip("Parent of skin/primary/secondary buttons — shown when body is active")]
+    public GameObject bodyColorButtons;
+    [Tooltip("Parent of accessory button — shown when an accessory slot is active")]
+    public GameObject accessoryColorButtons;
+    [Tooltip("Parent of decal button — shown when decal is active")]
+    public GameObject decalColorButtons;
 
     [Header("UI Elements")]
     public TMP_InputField nameInput;
     public Button         saveButton;
 
-    [Header("Palettes")]
-    public Color[] skinPalette;
-    public Color[] colorPalette; // shared by primary, secondary, accessory, decal
+    [Header("Decal")]
+    public float decalSizeStep = 0.05f;
+    public float decalSizeMin  = 0.1f;
+    public float decalSizeMax  = 2f;
 
     // ── Internal ──────────────────────────────────────────────────────────
 
@@ -35,6 +54,12 @@ public class CharacterCreatorUI : MonoBehaviour
 
     private CharacterConfig config;
     private int activeSlot = -1; // -1 = body, 0-6 = accessory slot
+
+    enum ColorTarget { None, Skin, Primary, Secondary, Accessory, Decal }
+    ColorTarget activeColorTarget = ColorTarget.None;
+
+    // Listener stored so we can remove it before wiring a new target
+    UnityEngine.Events.UnityAction<Color> colorChangeListener;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────
 
@@ -45,39 +70,128 @@ public class CharacterCreatorUI : MonoBehaviour
             : new CharacterConfig();
 
         BuildRows();
-        BuildSkinPalette();
-        BuildPrimaryPalette();
-        BuildSecondaryPalette();
-        BuildAccessoryPalette();
-        BuildDecalPalette();
         ShowPalettesFor(PaletteMode.Body);
 
         nameInput.text = config.characterName;
         nameInput.onValueChanged.AddListener(v => config.characterName = v);
         saveButton.onClick.AddListener(OnSave);
 
-        preview.ApplyConfig(config, skinPalette, colorPalette);
+        // Wire color target buttons
+        skinColorButton.onClick.AddListener(()      => SetColorTarget(ColorTarget.Skin));
+        primaryColorButton.onClick.AddListener(()   => SetColorTarget(ColorTarget.Primary));
+        secondaryColorButton.onClick.AddListener(() => SetColorTarget(ColorTarget.Secondary));
+        accessoryColorButton.onClick.AddListener(() => SetColorTarget(ColorTarget.Accessory));
+        decalColorButton.onClick.AddListener(()     => SetColorTarget(ColorTarget.Decal));
+
+        preview.ApplyConfig(config);
+        UpdateColorButtonImages();
+
+        // Default to skin color on open
+        SetColorTarget(ColorTarget.Skin);
+    }
+
+    // ── Color target ──────────────────────────────────────────────────────
+
+    void SetColorTarget(ColorTarget target)
+    {
+        activeColorTarget = target;
+
+        // Detach previous listener
+        if (colorChangeListener != null)
+        {
+            colorPicker.onColorChange.RemoveListener(colorChangeListener);
+            colorChangeListener = null;
+        }
+
+        // Find the current color for this target
+        Color current = GetConfigColor(target);
+        colorPicker.color = current;
+
+        // Wire new listener
+        colorChangeListener = color =>
+        {
+            SetConfigColor(target, color);
+            UpdateColorButtonImages();
+        };
+        colorPicker.onColorChange.AddListener(colorChangeListener);
+    }
+
+    Color GetConfigColor(ColorTarget target)
+    {
+        switch (target)
+        {
+            case ColorTarget.Skin:      return config.skinColor;
+            case ColorTarget.Primary:   return config.primaryColor;
+            case ColorTarget.Secondary: return config.secondaryColor;
+            case ColorTarget.Accessory: return activeSlot >= 0 ? config.accessoryColors[activeSlot] : Color.white;
+            case ColorTarget.Decal:     return config.decalColor;
+            default:                    return Color.white;
+        }
+    }
+
+    void SetConfigColor(ColorTarget target, Color color)
+    {
+        switch (target)
+        {
+            case ColorTarget.Skin:
+                config.skinColor = color;
+                preview.ApplySkinColor(color);
+                break;
+            case ColorTarget.Primary:
+                config.primaryColor = color;
+                preview.ApplyPrimaryColor(color);
+                break;
+            case ColorTarget.Secondary:
+                config.secondaryColor = color;
+                preview.ApplySecondaryColor(color);
+                break;
+            case ColorTarget.Accessory:
+                if (activeSlot >= 0)
+                {
+                    config.accessoryColors[activeSlot] = color;
+                    preview.SetAccessoryColor(activeSlot, color);
+                }
+                break;
+            case ColorTarget.Decal:
+                config.decalColor = color;
+                preview.SetDecalColor(color);
+                break;
+        }
+    }
+
+    void UpdateColorButtonImages()
+    {
+        SetButtonColor(skinColorButton,       config.skinColor);
+        SetButtonColor(primaryColorButton,    config.primaryColor);
+        SetButtonColor(secondaryColorButton,  config.secondaryColor);
+        if (activeSlot >= 0)
+            SetButtonColor(accessoryColorButton, config.accessoryColors[activeSlot]);
+        SetButtonColor(decalColorButton, config.decalColor);
+    }
+
+    void SetButtonColor(Button btn, Color color)
+    {
+        if (btn == null) return;
+        color.a = 1f;
+        btn.GetComponent<Image>().color = color;
     }
 
     // ── Row builder ───────────────────────────────────────────────────────
 
     void BuildRows()
     {
-        // SlotLabels[0] = Body (slot -1), SlotLabels[1..7] = accessory slots 0..6
         for (int i = 0; i < SlotLabels.Length; i++)
         {
-            int slot = i - 1; // -1 for body, 0-6 for accessories
+            int slot = i - 1;
             AddRow(SlotLabels[i],
                 () => Step(slot, -1),
                 () => Step(slot, +1));
         }
 
-        // Decal material row
         AddRow("Decal",
             () => StepDecal(-1),
             () => StepDecal(+1));
 
-        // Decal size rows
         AddRow("Decal W",
             () => StepDecalWidth(-decalSizeStep),
             () => StepDecalWidth(+decalSizeStep));
@@ -97,9 +211,58 @@ public class CharacterCreatorUI : MonoBehaviour
         buttons[1].onClick.AddListener(() => onForward());
     }
 
+    // ── Palette visibility ────────────────────────────────────────────────
+
+    enum PaletteMode { Body, Accessory, Decal }
+
+    void ShowPalettesFor(PaletteMode mode)
+    {
+        if (bodyColorButtons != null)
+            bodyColorButtons.SetActive(mode == PaletteMode.Body);
+        if (accessoryColorButtons != null)
+            accessoryColorButtons.SetActive(mode == PaletteMode.Accessory);
+        if (decalColorButtons != null)
+            decalColorButtons.SetActive(mode == PaletteMode.Decal);
+    }
+
+    // ── Step forward / back ───────────────────────────────────────────────
+
+    void Step(int slot, int direction)
+    {
+        activeSlot = slot;
+        PaletteMode mode = slot < 0 ? PaletteMode.Body : PaletteMode.Accessory;
+        ShowPalettesFor(mode);
+
+        // Switch color target to match active slot
+        if (slot < 0)
+            SetColorTarget(ColorTarget.Skin);
+        else
+            SetColorTarget(ColorTarget.Accessory);
+
+        if (slot < 0)
+        {
+            var bodies = preview.GetBodyPrefabs();
+            if (bodies == null || bodies.Length == 0) return;
+            config.bodyIndex = Wrap(config.bodyIndex + direction, bodies.Length);
+            preview.SetBody(config.bodyIndex, config);
+        }
+        else
+        {
+            var prefabs = preview.GetAccessoryPrefabs(slot);
+            int count   = prefabs != null ? prefabs.Length : 0;
+
+            int current = config.accessoryIndices[slot] + 1;
+            current = Wrap(current + direction, count + 1);
+            config.accessoryIndices[slot] = current - 1;
+
+            preview.SetAccessory(slot, config.accessoryIndices[slot], config.accessoryColors[slot]);
+        }
+    }
+
     void StepDecal(int direction)
     {
         ShowPalettesFor(PaletteMode.Decal);
+        SetColorTarget(ColorTarget.Decal);
 
         var materials = preview.GetDecalMaterials();
         int count     = materials != null ? materials.Length : 0;
@@ -107,32 +270,7 @@ public class CharacterCreatorUI : MonoBehaviour
         current = Wrap(current + direction, count + 1);
         config.decalIndex = current - 1;
         preview.SetDecal(config.decalIndex);
-        preview.SetDecalColor(SafeDecalColor());
-    }
-
-    void BuildDecalPalette()
-    {
-        if (decalPaletteContent == null)
-        {
-            Debug.LogWarning("[CharacterCreatorUI] decalPaletteContent is not assigned.");
-            return;
-        }
-        foreach (Transform t in decalPaletteContent) Destroy(t.gameObject);
-        for (int i = 0; i < colorPalette.Length; i++)
-        {
-            int idx = i;
-            BuildSwatch(decalPaletteContent, colorPalette[idx], () =>
-            {
-                config.decalColorIndex = idx;
-                preview.SetDecalColor(colorPalette[idx]);
-            });
-        }
-    }
-
-    Color SafeDecalColor()
-    {
-        int idx = config.decalColorIndex;
-        return colorPalette != null && idx < colorPalette.Length ? colorPalette[idx] : Color.white;
+        preview.SetDecalColor(config.decalColor);
     }
 
     void StepDecalWidth(float delta)
@@ -147,127 +285,10 @@ public class CharacterCreatorUI : MonoBehaviour
         preview.SetDecalSize(config.decalWidth, config.decalHeight);
     }
 
-    // ── Step forward / back ───────────────────────────────────────────────
-
-    enum PaletteMode { Body, Accessory, Decal }
-
-    void ShowPalettesFor(PaletteMode mode)
-    {
-        skinPaletteContent.gameObject.SetActive(mode == PaletteMode.Body);
-        primaryPaletteContent.gameObject.SetActive(mode == PaletteMode.Body);
-        secondaryPaletteContent.gameObject.SetActive(mode == PaletteMode.Body);
-        accessoryPaletteContent.gameObject.SetActive(mode == PaletteMode.Accessory);
-        if (decalPaletteContent != null)
-            decalPaletteContent.gameObject.SetActive(mode == PaletteMode.Decal);
-    }
-
-    void Step(int slot, int direction)
-    {
-        activeSlot = slot;
-        ShowPalettesFor(slot < 0 ? PaletteMode.Body : PaletteMode.Accessory);
-        BuildAccessoryPalette();
-
-        if (slot < 0)
-        {
-            // Body
-            var bodies = preview.GetBodyPrefabs();
-            if (bodies == null || bodies.Length == 0) return;
-            config.bodyIndex = Wrap(config.bodyIndex + direction, bodies.Length);
-            preview.SetBody(config.bodyIndex, SafeSkinColor(), SafePrimaryColor(), SafeSecondaryColor(), config, colorPalette);
-
-        }
-        else
-        {
-            // Accessory — index -1 means None, 0..n-1 are prefabs
-            var prefabs = preview.GetAccessoryPrefabs(slot);
-            int count   = prefabs != null ? prefabs.Length : 0;
-
-            // Shift -1..count-1 into 0..count, wrap, then shift back
-            int current = config.accessoryIndices[slot] + 1;
-            current = Wrap(current + direction, count + 1);
-            config.accessoryIndices[slot] = current - 1;
-
-            preview.SetAccessory(slot, config.accessoryIndices[slot], SafeAccessoryColor(slot));
-        }
-    }
-
-    // Wraps value into [0, length)
     int Wrap(int value, int length)
     {
         if (length <= 0) return 0;
         return ((value % length) + length) % length;
-    }
-
-    // ── Palettes ──────────────────────────────────────────────────────────
-
-    void BuildSkinPalette()
-    {
-        foreach (Transform t in skinPaletteContent) Destroy(t.gameObject);
-        for (int i = 0; i < skinPalette.Length; i++)
-        {
-            int idx = i;
-            BuildSwatch(skinPaletteContent, skinPalette[idx], () =>
-            {
-                config.skinColorIndex = idx;
-                preview.ApplySkinColor(skinPalette[idx]);
-            });
-        }
-    }
-
-    void BuildPrimaryPalette()
-    {
-        foreach (Transform t in primaryPaletteContent) Destroy(t.gameObject);
-        for (int i = 0; i < colorPalette.Length; i++)
-        {
-            int idx = i;
-            BuildSwatch(primaryPaletteContent, colorPalette[idx], () =>
-            {
-                config.primaryColorIndex = idx;
-                preview.ApplyPrimaryColor(colorPalette[idx]);
-            });
-        }
-    }
-
-    void BuildSecondaryPalette()
-    {
-        foreach (Transform t in secondaryPaletteContent) Destroy(t.gameObject);
-        for (int i = 0; i < colorPalette.Length; i++)
-        {
-            int idx = i;
-            BuildSwatch(secondaryPaletteContent, colorPalette[idx], () =>
-            {
-                config.secondaryColorIndex = idx;
-                preview.ApplySecondaryColor(colorPalette[idx]);
-            });
-        }
-    }
-
-    void BuildAccessoryPalette()
-    {
-        foreach (Transform t in accessoryPaletteContent) Destroy(t.gameObject);
-
-        // No accessory palette when body is active
-        if (activeSlot < 0) return;
-
-        int slot = activeSlot;
-        for (int i = 0; i < colorPalette.Length; i++)
-        {
-            int idx = i;
-            BuildSwatch(accessoryPaletteContent, colorPalette[idx], () =>
-            {
-                config.accessoryColorIndices[slot] = idx;
-                preview.SetAccessoryColor(slot, colorPalette[idx]);
-            });
-        }
-    }
-
-    void BuildSwatch(Transform container, Color color, System.Action onClick)
-    {
-        var btn = Instantiate(GetSwatchPrefab(), container);
-        // Force alpha to 1 — inspector Color arrays default new entries to alpha 0
-        color.a = 1f;
-        btn.GetComponent<Image>().color = color;
-        btn.GetComponent<Button>().onClick.AddListener(() => onClick());
     }
 
     // ── Save ──────────────────────────────────────────────────────────────
@@ -286,55 +307,5 @@ public class CharacterCreatorUI : MonoBehaviour
             }
             manager.Save();
         }
-    }
-
-    // ── Helpers ───────────────────────────────────────────────────────────
-
-    Color SafeSkinColor()
-    {
-        int idx = config.skinColorIndex;
-        return skinPalette != null && idx < skinPalette.Length ? skinPalette[idx] : Color.white;
-    }
-
-    Color SafePrimaryColor()
-    {
-        int idx = config.primaryColorIndex;
-        return colorPalette != null && idx < colorPalette.Length ? colorPalette[idx] : Color.white;
-    }
-
-    Color SafeSecondaryColor()
-    {
-        int idx = config.secondaryColorIndex;
-        return colorPalette != null && idx < colorPalette.Length ? colorPalette[idx] : Color.white;
-    }
-
-    Color SafeAccessoryColor(int slot)
-    {
-        int idx = config.accessoryColorIndices[slot];
-        return colorPalette != null && idx < colorPalette.Length ? colorPalette[idx] : Color.white;
-    }
-
-    [Header("Swatch")]
-    public float swatchSize = 40f;
-    public Sprite swatchSprite;
-
-    [Header("Decal")]
-    public float decalSizeStep = 0.05f;
-    public float decalSizeMin  = 0.1f;
-    public float decalSizeMax  = 2f;
-
-    // Swatch prefab: a GameObject with Image + Button components
-    GameObject swatchPrefabInstance;
-    GameObject GetSwatchPrefab()
-    {
-        if (swatchPrefabInstance != null) return swatchPrefabInstance;
-        swatchPrefabInstance = new GameObject("Swatch", typeof(Image), typeof(Button));
-        var img = swatchPrefabInstance.GetComponent<Image>();
-        img.sprite = swatchSprite;
-        img.type   = Image.Type.Simple;
-        var layout = swatchPrefabInstance.AddComponent<LayoutElement>();
-        layout.preferredWidth  = swatchSize;
-        layout.preferredHeight = swatchSize;
-        return swatchPrefabInstance;
     }
 }
