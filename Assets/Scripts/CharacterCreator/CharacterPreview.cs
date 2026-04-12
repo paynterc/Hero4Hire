@@ -209,6 +209,9 @@ public class CharacterPreview : MonoBehaviour
 
     public Material[] GetDecalMaterials() => decalMaterials;
 
+    private Material decalMaterialInstance;
+    private Color    _lastDecalColor = Color.white;
+
     public void SetDecal(int index)
     {
         if (decalProjector == null) return;
@@ -218,8 +221,22 @@ public class CharacterPreview : MonoBehaviour
             return;
         }
         if (decalMaterials == null || index >= decalMaterials.Length) return;
+
+        // Create a runtime instance so we can tint it without modifying the asset
+        if (decalMaterialInstance != null) Destroy(decalMaterialInstance);
+        decalMaterialInstance = new Material(decalMaterials[index]);
+        decalMaterialInstance.SetColor("_BaseColor", _lastDecalColor);
+
         decalProjector.enabled  = true;
-        decalProjector.material = decalMaterials[index];
+        decalProjector.material = decalMaterialInstance;
+    }
+
+    public void SetDecalColor(Color color)
+    {
+        _lastDecalColor = color;
+        if (decalMaterialInstance == null) return;
+
+        decalMaterialInstance.SetColor("_TintColor", color);
     }
 
     public void SetDecalSize(float width, float height)
@@ -239,6 +256,7 @@ public class CharacterPreview : MonoBehaviour
 
         SetBody(config.bodyIndex, skin, primary, secondary, config, accessoryPalette);
         SetDecal(config.decalIndex);
+        SetDecalColor(SafeColor(accessoryPalette, config.decalColorIndex));
         SetDecalSize(config.decalWidth, config.decalHeight);
     }
 

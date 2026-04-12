@@ -15,6 +15,7 @@ public class CharacterCreatorUI : MonoBehaviour
     [Header("UI Containers")]
     public Transform rowContainer;
     public Transform accessoryPaletteContent;
+    public Transform decalPaletteContent;
     public Transform skinPaletteContent;
     public Transform primaryPaletteContent;
     public Transform secondaryPaletteContent;
@@ -50,8 +51,8 @@ public class CharacterCreatorUI : MonoBehaviour
         BuildPrimaryPalette();
         BuildSecondaryPalette();
         BuildAccessoryPalette();
-        primaryPaletteContent.gameObject.SetActive(true);
-        secondaryPaletteContent.gameObject.SetActive(true);
+        BuildDecalPalette();
+        ShowPalettesFor(PaletteMode.Body);
 
         nameInput.text = config.characterName;
         nameInput.onValueChanged.AddListener(v => config.characterName = v);
@@ -100,12 +101,40 @@ public class CharacterCreatorUI : MonoBehaviour
 
     void StepDecal(int direction)
     {
+        ShowPalettesFor(PaletteMode.Decal);
+
         var materials = preview.GetDecalMaterials();
         int count     = materials != null ? materials.Length : 0;
         int current   = config.decalIndex + 1;
         current = Wrap(current + direction, count + 1);
         config.decalIndex = current - 1;
         preview.SetDecal(config.decalIndex);
+        preview.SetDecalColor(SafeDecalColor());
+    }
+
+    void BuildDecalPalette()
+    {
+        if (decalPaletteContent == null)
+        {
+            Debug.LogWarning("[CharacterCreatorUI] decalPaletteContent is not assigned.");
+            return;
+        }
+        foreach (Transform t in decalPaletteContent) Destroy(t.gameObject);
+        for (int i = 0; i < accessoryPalette.Length; i++)
+        {
+            int idx = i;
+            BuildSwatch(decalPaletteContent, accessoryPalette[idx], () =>
+            {
+                config.decalColorIndex = idx;
+                preview.SetDecalColor(accessoryPalette[idx]);
+            });
+        }
+    }
+
+    Color SafeDecalColor()
+    {
+        int idx = config.decalColorIndex;
+        return accessoryPalette != null && idx < accessoryPalette.Length ? accessoryPalette[idx] : Color.white;
     }
 
     void StepDecalWidth(float delta)
@@ -122,12 +151,22 @@ public class CharacterCreatorUI : MonoBehaviour
 
     // ── Step forward / back ───────────────────────────────────────────────
 
+    enum PaletteMode { Body, Accessory, Decal }
+
+    void ShowPalettesFor(PaletteMode mode)
+    {
+        skinPaletteContent.gameObject.SetActive(mode == PaletteMode.Body);
+        primaryPaletteContent.gameObject.SetActive(mode == PaletteMode.Body);
+        secondaryPaletteContent.gameObject.SetActive(mode == PaletteMode.Body);
+        accessoryPaletteContent.gameObject.SetActive(mode == PaletteMode.Accessory);
+        if (decalPaletteContent != null)
+            decalPaletteContent.gameObject.SetActive(mode == PaletteMode.Decal);
+    }
+
     void Step(int slot, int direction)
     {
         activeSlot = slot;
-        bool isBody = slot < 0;
-        primaryPaletteContent.gameObject.SetActive(isBody);
-        secondaryPaletteContent.gameObject.SetActive(isBody);
+        ShowPalettesFor(slot < 0 ? PaletteMode.Body : PaletteMode.Accessory);
         BuildAccessoryPalette();
 
         if (slot < 0)

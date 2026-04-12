@@ -13,9 +13,10 @@ public class CharacterConfig
     public int skinColorIndex      = 0;
     public int primaryColorIndex   = 0;
     public int secondaryColorIndex = 0;
-    public int   decalIndex  = -1;
-    public float decalWidth  = 0.5f;
-    public float decalHeight = 0.5f;
+    public int   decalIndex      = -1;
+    public int   decalColorIndex = 0;
+    public float decalWidth      = 0.5f;
+    public float decalHeight     = 0.5f;
     public string portraitPath = "";
 
     public CharacterConfig()
