@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
 public class PlayerIK : MonoBehaviour
 {
     public Transform rightHandTarget;
@@ -13,7 +12,10 @@ public class PlayerIK : MonoBehaviour
 
     void Start()
     {
-        animator = GetComponent<Animator>();
+        foreach (var a in GetComponentsInChildren<Animator>())
+        {
+            if (a.runtimeAnimatorController != null) { animator = a; break; }
+        }
         abilitySystem = GetComponentInParent<AbilitySystem>();
     }
 
@@ -25,8 +27,10 @@ public class PlayerIK : MonoBehaviour
         ikWeight = Mathf.Lerp(ikWeight, targetWeight, blendSpeed * Time.deltaTime);
     }
 
-    void OnAnimatorIK(int layerIndex)
+    public void RelayAnimatorIK(int layerIndex)
     {
+        if (animator == null) return;
+
         if (rightHandTarget != null)
         {
             animator.SetIKPositionWeight(AvatarIKGoal.RightHand, ikWeight);

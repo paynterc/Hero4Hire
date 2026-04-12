@@ -41,7 +41,8 @@ public class CharacterPreview : MonoBehaviour
 
         if (bodyPrefabs.Length == 0)
         {
-            currentBody = gameObject;
+            currentBody  = gameObject;
+            BodyAnimator = GetComponentInChildren<Animator>();
             RefreshAttachPoints();
         }
     }
@@ -53,12 +54,19 @@ public class CharacterPreview : MonoBehaviour
 
     // ── Body ─────────────────────────────────────────────────────────────
 
+    public Animator BodyAnimator { get; private set; }
+
     public void SetBody(int index, CharacterConfig config)
     {
         if (currentBody != null) Destroy(currentBody);
         if (bodyPrefabs == null || index < 0 || index >= bodyPrefabs.Length) return;
 
-        currentBody = Instantiate(bodyPrefabs[index], transform.position, transform.rotation, transform);
+        currentBody  = Instantiate(bodyPrefabs[index], transform.position, transform.rotation, transform);
+        BodyAnimator = currentBody.GetComponentInChildren<Animator>();
+
+        var relay = currentBody.GetComponentInChildren<AnimatorIKRelay>();
+        if (relay != null)
+            relay.playerIK = GetComponent<PlayerIK>();
 
         RefreshAttachPoints();
         ApplyBodyColors(config.skinColor, config.primaryColor, config.secondaryColor);

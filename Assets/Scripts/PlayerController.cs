@@ -30,7 +30,10 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         abilitySystem = GetComponent<AbilitySystem>();
-        animator = GetComponentInChildren<Animator>();
+        foreach (var a in GetComponentsInChildren<Animator>())
+        {
+            if (a.runtimeAnimatorController != null) { animator = a; break; }
+        }
         Cursor.lockState = CursorLockMode.None;
 		Cursor.visible = true;
 

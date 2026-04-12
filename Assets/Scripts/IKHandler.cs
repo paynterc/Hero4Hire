@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
 public class IKHandler : MonoBehaviour
 {
     public Transform rightHandTarget;
@@ -13,17 +12,18 @@ public class IKHandler : MonoBehaviour
 
     void Start()
     {
-        animator = GetComponent<Animator>();
+    	
+    	animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-
         float targetWeight = ikOn ? 1f : 0f;
         ikWeight = Mathf.Lerp(ikWeight, targetWeight, blendSpeed * Time.deltaTime);
     }
 
-    void OnAnimatorIK(int layerIndex)
+
+    public void OnAnimatorIK(int layerIndex)
     {
         if (animator == null) return;
 
