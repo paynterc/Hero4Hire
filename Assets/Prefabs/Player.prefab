@@ -74,7 +74,6 @@ GameObject:
   - component: {fileID: 8037620343369061545}
   - component: {fileID: 5896437884172751447}
   - component: {fileID: 7139083058636279008}
-  - component: {fileID: 6303094580482322674}
   m_Layer: 0
   m_Name: Male01 C001
   m_TagString: Untagged
@@ -183,7 +182,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1600826309108129131}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
@@ -197,21 +196,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6303094580482322674
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1600826309108129131}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45c9188799c39448eb45b1c1603fe744, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerIK
-  rightHandTarget: {fileID: 3488558725408645291}
-  leftHandTarget: {fileID: 7809750303899241097}
-  blendSpeed: 8
 --- !u!1 &2628177560889323664
 GameObject:
   m_ObjectHideFlags: 0
@@ -1057,7 +1041,11 @@ MonoBehaviour:
   gravity: -100
   rotationSpeed: 15
   justLanded: 1
-  isGroundedDebug: 0
+  isGrounded: 0
+  groundCheckRadius: 0.2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
   externalVelocity: {x: 0, y: 0, z: 0}
   overrideMovement: 0
   lastMoveDirection: {x: 0, y: 0, z: 0}
