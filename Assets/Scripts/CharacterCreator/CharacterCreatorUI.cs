@@ -14,11 +14,11 @@ public class CharacterCreatorUI : MonoBehaviour
 
     [Header("UI Containers")]
     public Transform rowContainer;
-    public Transform accessoryPaletteContent;
-    public Transform decalPaletteContent;
     public Transform skinPaletteContent;
     public Transform primaryPaletteContent;
     public Transform secondaryPaletteContent;
+    public Transform accessoryPaletteContent;
+    public Transform decalPaletteContent;
 
     [Header("UI Elements")]
     public TMP_InputField nameInput;
@@ -26,9 +26,7 @@ public class CharacterCreatorUI : MonoBehaviour
 
     [Header("Palettes")]
     public Color[] skinPalette;
-    public Color[] primaryPalette;
-    public Color[] secondaryPalette;
-    public Color[] accessoryPalette;
+    public Color[] colorPalette; // shared by primary, secondary, accessory, decal
 
     // ── Internal ──────────────────────────────────────────────────────────
 
@@ -58,7 +56,7 @@ public class CharacterCreatorUI : MonoBehaviour
         nameInput.onValueChanged.AddListener(v => config.characterName = v);
         saveButton.onClick.AddListener(OnSave);
 
-        preview.ApplyConfig(config, skinPalette, primaryPalette, secondaryPalette, accessoryPalette);
+        preview.ApplyConfig(config, skinPalette, colorPalette);
     }
 
     // ── Row builder ───────────────────────────────────────────────────────
@@ -120,13 +118,13 @@ public class CharacterCreatorUI : MonoBehaviour
             return;
         }
         foreach (Transform t in decalPaletteContent) Destroy(t.gameObject);
-        for (int i = 0; i < accessoryPalette.Length; i++)
+        for (int i = 0; i < colorPalette.Length; i++)
         {
             int idx = i;
-            BuildSwatch(decalPaletteContent, accessoryPalette[idx], () =>
+            BuildSwatch(decalPaletteContent, colorPalette[idx], () =>
             {
                 config.decalColorIndex = idx;
-                preview.SetDecalColor(accessoryPalette[idx]);
+                preview.SetDecalColor(colorPalette[idx]);
             });
         }
     }
@@ -134,7 +132,7 @@ public class CharacterCreatorUI : MonoBehaviour
     Color SafeDecalColor()
     {
         int idx = config.decalColorIndex;
-        return accessoryPalette != null && idx < accessoryPalette.Length ? accessoryPalette[idx] : Color.white;
+        return colorPalette != null && idx < colorPalette.Length ? colorPalette[idx] : Color.white;
     }
 
     void StepDecalWidth(float delta)
@@ -175,7 +173,8 @@ public class CharacterCreatorUI : MonoBehaviour
             var bodies = preview.GetBodyPrefabs();
             if (bodies == null || bodies.Length == 0) return;
             config.bodyIndex = Wrap(config.bodyIndex + direction, bodies.Length);
-            preview.SetBody(config.bodyIndex, SafeSkinColor(), SafePrimaryColor(), SafeSecondaryColor(), config, accessoryPalette);
+            preview.SetBody(config.bodyIndex, SafeSkinColor(), SafePrimaryColor(), SafeSecondaryColor(), config, colorPalette);
+
         }
         else
         {
@@ -218,13 +217,13 @@ public class CharacterCreatorUI : MonoBehaviour
     void BuildPrimaryPalette()
     {
         foreach (Transform t in primaryPaletteContent) Destroy(t.gameObject);
-        for (int i = 0; i < primaryPalette.Length; i++)
+        for (int i = 0; i < colorPalette.Length; i++)
         {
             int idx = i;
-            BuildSwatch(primaryPaletteContent, primaryPalette[idx], () =>
+            BuildSwatch(primaryPaletteContent, colorPalette[idx], () =>
             {
                 config.primaryColorIndex = idx;
-                preview.ApplyPrimaryColor(primaryPalette[idx]);
+                preview.ApplyPrimaryColor(colorPalette[idx]);
             });
         }
     }
@@ -232,13 +231,13 @@ public class CharacterCreatorUI : MonoBehaviour
     void BuildSecondaryPalette()
     {
         foreach (Transform t in secondaryPaletteContent) Destroy(t.gameObject);
-        for (int i = 0; i < secondaryPalette.Length; i++)
+        for (int i = 0; i < colorPalette.Length; i++)
         {
             int idx = i;
-            BuildSwatch(secondaryPaletteContent, secondaryPalette[idx], () =>
+            BuildSwatch(secondaryPaletteContent, colorPalette[idx], () =>
             {
                 config.secondaryColorIndex = idx;
-                preview.ApplySecondaryColor(secondaryPalette[idx]);
+                preview.ApplySecondaryColor(colorPalette[idx]);
             });
         }
     }
@@ -251,13 +250,13 @@ public class CharacterCreatorUI : MonoBehaviour
         if (activeSlot < 0) return;
 
         int slot = activeSlot;
-        for (int i = 0; i < accessoryPalette.Length; i++)
+        for (int i = 0; i < colorPalette.Length; i++)
         {
             int idx = i;
-            BuildSwatch(accessoryPaletteContent, accessoryPalette[idx], () =>
+            BuildSwatch(accessoryPaletteContent, colorPalette[idx], () =>
             {
                 config.accessoryColorIndices[slot] = idx;
-                preview.SetAccessoryColor(slot, accessoryPalette[idx]);
+                preview.SetAccessoryColor(slot, colorPalette[idx]);
             });
         }
     }
@@ -300,19 +299,19 @@ public class CharacterCreatorUI : MonoBehaviour
     Color SafePrimaryColor()
     {
         int idx = config.primaryColorIndex;
-        return primaryPalette != null && idx < primaryPalette.Length ? primaryPalette[idx] : Color.white;
+        return colorPalette != null && idx < colorPalette.Length ? colorPalette[idx] : Color.white;
     }
 
     Color SafeSecondaryColor()
     {
         int idx = config.secondaryColorIndex;
-        return secondaryPalette != null && idx < secondaryPalette.Length ? secondaryPalette[idx] : Color.white;
+        return colorPalette != null && idx < colorPalette.Length ? colorPalette[idx] : Color.white;
     }
 
     Color SafeAccessoryColor(int slot)
     {
         int idx = config.accessoryColorIndices[slot];
-        return accessoryPalette != null && idx < accessoryPalette.Length ? accessoryPalette[idx] : Color.white;
+        return colorPalette != null && idx < colorPalette.Length ? colorPalette[idx] : Color.white;
     }
 
     [Header("Swatch")]

@@ -248,15 +248,15 @@ public class CharacterPreview : MonoBehaviour
 
     // ── Full config apply ─────────────────────────────────────────────────
 
-    public void ApplyConfig(CharacterConfig config, Color[] skinPalette, Color[] primaryPalette, Color[] secondaryPalette, Color[] accessoryPalette)
+    public void ApplyConfig(CharacterConfig config, Color[] skinPalette, Color[] colorPalette)
     {
-        Color skin      = SafeColor(skinPalette,      config.skinColorIndex);
-        Color primary   = SafeColor(primaryPalette,   config.primaryColorIndex);
-        Color secondary = SafeColor(secondaryPalette, config.secondaryColorIndex);
+        Color skin      = SafeColor(skinPalette,   config.skinColorIndex);
+        Color primary   = SafeColor(colorPalette,  config.primaryColorIndex);
+        Color secondary = SafeColor(colorPalette,  config.secondaryColorIndex);
 
-        SetBody(config.bodyIndex, skin, primary, secondary, config, accessoryPalette);
+        SetBody(config.bodyIndex, skin, primary, secondary, config, colorPalette);
         SetDecal(config.decalIndex);
-        SetDecalColor(SafeColor(accessoryPalette, config.decalColorIndex));
+        SetDecalColor(SafeColor(colorPalette, config.decalColorIndex));
         SetDecalSize(config.decalWidth, config.decalHeight);
     }
 
