@@ -27,7 +27,6 @@ public class BaseJumpAbility : Ability
 
         if (player.isGrounded)
         {
-        	Debug.Log($"Jump energy cost {jump.energyCost}");
         	energy.Spend(jump.energyCost);
             player.yVelocity = jump.jumpForce;
         }

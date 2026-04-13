@@ -26,7 +26,6 @@ public class DestroyOnTouch : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("DESTROY ON TOUCH, HIT: " + other.name);
         if (!started && IsValidTrigger(other.gameObject))
         {
             started = true;
@@ -36,7 +35,6 @@ public class DestroyOnTouch : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        Debug.Log("DESTROY ON TOUCH, STAY: " + other.name);
         if (!started && IsValidTrigger(other.gameObject))
         {
             started = true;
@@ -54,7 +52,6 @@ public class DestroyOnTouch : MonoBehaviour
 
     IEnumerator DestroyAfterTime()
     {
-        	Debug.Log("DestroyAfterTime");
 
         yield return new WaitForSeconds(delay);
         Destroy(gameObject);

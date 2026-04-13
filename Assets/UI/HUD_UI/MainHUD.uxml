@@ -1,0 +1,12 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/HUD_UI/player-info.uss?fileID=7433441132597879392&amp;guid=6582b01196735456a868934d27beb770&amp;type=3#player-info"/>
+    <ui:VisualElement name="PlayerInfo" class="player-info">
+        <ui:VisualElement name="PortraitContainer" class="player-portrait-container" style="flex-grow: 1;">
+            <ui:Image name="PlayerPortrait" source="" class="player-portrait"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="StatusBars" style="flex-grow: 1; height: 82px; min-height: auto; flex-shrink: 1;">
+            <ui:Image name="EnergyBar" source="project://database/Assets/FlexibleColorPicker/Sprites/DefGrad_A_Hor.png?fileID=21300000&amp;guid=ba5d461523497aa4a89188b483558a52&amp;type=3#DefGrad_A_Hor" tint-color="rgb(0, 143, 241)" scale-mode="StretchToFill" uv="0.5,0,1,1" class="player-status-bar"/>
+            <ui:Image tint-color="rgb(236, 32, 32)" source="project://database/Assets/FlexibleColorPicker/Sprites/DefGrad_A_Hor.png?fileID=21300000&amp;guid=ba5d461523497aa4a89188b483558a52&amp;type=3#DefGrad_A_Hor" scale-mode="StretchToFill" name="HealthBar" uv="0.5,0,1,1" class="player-status-bar"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -33,7 +33,7 @@ public class LC_Abduction1 : MonoBehaviour
 
         // Count units
         int count = GameObject.FindGameObjectsWithTag(unitTag).Length;
-        remainingText.text = "Remaining: " + count;
+        remainingText.text = "Civilians Left: " + count;
 
         // Timer countdown
         timeLeft -= Time.deltaTime;
@@ -42,12 +42,12 @@ public class LC_Abduction1 : MonoBehaviour
         // Lose condition (all units gone)
         if (count == 0)
         {
-            EndMatch("MATCH OVER");
+            EndMatch("DEFEAT");
         }
         // Win condition (time ran out, units still exist)
         else if (timeLeft <= 0f)
         {
-            EndMatch("YOU WIN");
+            EndMatch("SUCCESS!!");
         }
     }
 
