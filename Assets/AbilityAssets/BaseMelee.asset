@@ -16,6 +16,10 @@ MonoBehaviour:
   abilityType: 2
   energyCost: 5
   disableIK: 1
+  cost: 0
+  icon: {fileID: 0}
+  description: 
+  validSlots: 0000000001000000
   comboSteps:
   - animatorTrigger: Punch
     damage: 5
@@ -31,6 +35,9 @@ MonoBehaviour:
     slashZRot: 90
     slashScale: 50
     impactPrefab: {fileID: 1879272669879180, guid: 52baafc6c69151e418a228e14e1bd356, type: 3}
+    windupTime: 0
+    windupAnimatorTrigger: 
+    windupPrefab: {fileID: 0}
   - animatorTrigger: Punch2
     damage: 5
     energyCost: 0
@@ -45,6 +52,9 @@ MonoBehaviour:
     slashZRot: 180
     slashScale: 50
     impactPrefab: {fileID: 1879272669879180, guid: 52baafc6c69151e418a228e14e1bd356, type: 3}
+    windupTime: 0
+    windupAnimatorTrigger: 
+    windupPrefab: {fileID: 0}
   - animatorTrigger: Punch3
     damage: 10
     energyCost: 0
@@ -59,6 +69,9 @@ MonoBehaviour:
     slashZRot: -90
     slashScale: 50
     impactPrefab: {fileID: 1879272669879180, guid: 52baafc6c69151e418a228e14e1bd356, type: 3}
+    windupTime: 0
+    windupAnimatorTrigger: 
+    windupPrefab: {fileID: 0}
   attackRate: 0.5
   comboResetTime: 1.5
   targetLayers:

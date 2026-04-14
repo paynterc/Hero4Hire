@@ -12,6 +12,18 @@ public class PlayerSpawner : MonoBehaviour
         if (config != null)
             player.GetComponent<CharacterPreview>().ApplyConfig(config);
 
+        var registry = Resources.Load<AbilityRegistry>("AbilityRegistry");
+        if (registry != null && config?.loadout != null)
+        {
+            var system = player.GetComponent<AbilitySystem>();
+            if (system != null)
+            {
+                var bindings = registry.BuildBindings(config.loadout);
+                if (bindings.Count > 0)
+                    system.startingAbilities = bindings;
+            }
+        }
+
         var cam = Camera.main;
         if (cam != null)
         {

@@ -15,7 +15,11 @@ MonoBehaviour:
   abilityName: Dash
   abilityType: 2
   energyCost: 20
-  slot: 3
+  disableIK: 0
+  cost: 0
+  icon: {fileID: 0}
+  description: 
+  validSlots: 03000000050000000600000007000000
   sound: {fileID: 0}
   force: 20
   duration: 0.2

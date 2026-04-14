@@ -35,6 +35,13 @@ public abstract class Ability : ScriptableObject
 	public float energyCost = 20f;
     public bool disableIK = false;
 
+    public int cost = 0;
+    public Sprite icon;
+    [TextArea]
+    public string description = "";
+    [Tooltip("For base abilities: which slots this can fill. Leave empty for modifiers.")]
+    public ActionSlot[] validSlots;
+
     public virtual void OnEquip(GameObject owner, AbilityInstance instance) { }
     public virtual void OnUnequip(GameObject owner, AbilityInstance instance) { }
 
