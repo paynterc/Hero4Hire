@@ -15,6 +15,10 @@ MonoBehaviour:
   abilityName: Fire Projectile
   abilityType: 1
   energyCost: 20
-  slot: 0
+  disableIK: 0
+  cost: 0
+  icon: {fileID: 0}
+  description: 
+  validAbilityTypes: 00000000
   projectilePrefab: {fileID: 1523153560657062, guid: 188c00203ec6f7f47bb714a7a7a875af, type: 3}
   muzzleFlashPrefab: {fileID: 1000012903210382, guid: c5c17f834efbfd945a5e2c5c059319be, type: 3}

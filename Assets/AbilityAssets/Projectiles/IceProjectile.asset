@@ -15,6 +15,10 @@ MonoBehaviour:
   abilityName: Ice Projectile
   abilityType: 1
   energyCost: 20
-  slot: 0
+  disableIK: 0
+  cost: 0
+  icon: {fileID: 0}
+  description: 
+  validAbilityTypes: 00000000
   projectilePrefab: {fileID: 1523153560657062, guid: 19c7f662c0bf1a447be313604bf5e7a3, type: 3}
   muzzleFlashPrefab: {fileID: 1000012903210382, guid: 0bb2091220a6d754686c0d0486f7f56e, type: 3}
