@@ -421,6 +421,10 @@ MonoBehaviour:
         rid: 995870633243967571
       invert: 0
       targetNodeName: Search
+    - condition:
+        rid: 995870879121408207
+      invert: 0
+      targetNodeName: Search
   - name: Move to Last Known
     state:
       rid: 995870761215328325
@@ -463,7 +467,7 @@ MonoBehaviour:
     - rid: 995870761215328323
       type: {class: TargetInRangeCondition, ns: , asm: Assembly-CSharp}
       data:
-        range: 10
+        range: 50
     - rid: 995870761215328324
       type: {class: AttackingState, ns: , asm: Assembly-CSharp}
       data:
@@ -500,6 +504,10 @@ MonoBehaviour:
         obstacleLayers:
           serializedVersion: 2
           m_Bits: 256
+    - rid: 995870879121408207
+      type: {class: TimeoutCondition, ns: , asm: Assembly-CSharp}
+      data:
+        duration: 3
 --- !u!114 &6582951699492934717
 MonoBehaviour:
   m_ObjectHideFlags: 0
