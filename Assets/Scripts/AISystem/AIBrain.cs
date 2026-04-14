@@ -50,7 +50,7 @@ public class AIBrain : MonoBehaviour
                 break;
             }
         }
-		float speed = ctx.agent.velocity.magnitude;
+		float speed = ctx.AgentReady ? ctx.agent.velocity.magnitude : 0f;
     	if(ctx.animator)
     	{
 			ctx.animator.SetFloat("Speed", speed);        

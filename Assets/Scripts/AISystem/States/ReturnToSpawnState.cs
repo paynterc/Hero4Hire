@@ -8,7 +8,7 @@ public class ReturnToSpawnState : AIState
 
     public override void OnEnter(AIContext ctx)
     {
-        if (ctx.agent == null) return;
+        if (!ctx.AgentReady) return;
         ctx.agent.stoppingDistance = stoppingDistance;
         ctx.agent.updateRotation = true;
         ctx.agent.SetDestination(ctx.spawnPosition);
@@ -16,7 +16,7 @@ public class ReturnToSpawnState : AIState
 
     public override void OnExit(AIContext ctx)
     {
-        if (ctx.agent != null)
+        if (ctx.AgentReady)
             ctx.agent.ResetPath();
     }
 }

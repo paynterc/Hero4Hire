@@ -9,6 +9,7 @@ public class TargetDetectedCondition : AICondition
 
     public override bool Evaluate(AIContext ctx)
     {
+        if (!ctx.AgentReady) return false;
         if (ctx.target == null) return false;
 
         Vector3 ownerPos = ctx.owner.transform.position + Vector3.up;

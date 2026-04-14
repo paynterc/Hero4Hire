@@ -8,7 +8,7 @@ public class AttackingState : AIState
 
     public override void OnEnter(AIContext ctx)
     {
-        if (ctx.agent != null)
+        if (ctx.AgentReady)
             ctx.agent.ResetPath();
 
         ctx.abilitySystem?.SetHeld(attackSlot, true);

@@ -9,7 +9,7 @@ public class MoveToDestinationState : AIState
 
     public override void OnEnter(AIContext ctx)
     {
-        if (ctx.agent == null || destination == null) return;
+        if (!ctx.AgentReady || destination == null) return;
         ctx.agent.stoppingDistance = stoppingDistance;
         ctx.agent.updateRotation = true;
         ctx.agent.SetDestination(destination.position);
@@ -17,7 +17,7 @@ public class MoveToDestinationState : AIState
 
     public override void OnExit(AIContext ctx)
     {
-        if (ctx.agent != null)
+        if (ctx.AgentReady)
             ctx.agent.ResetPath();
     }
 }

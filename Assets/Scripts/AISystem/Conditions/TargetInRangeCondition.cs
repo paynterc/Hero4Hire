@@ -8,6 +8,7 @@ public class TargetInRangeCondition : AICondition
 
     public override bool Evaluate(AIContext ctx)
     {
+        if (!ctx.AgentReady) return false;
         if (ctx.target == null) return false;
         return Vector3.Distance(ctx.owner.transform.position, ctx.target.transform.position) <= range;
     }

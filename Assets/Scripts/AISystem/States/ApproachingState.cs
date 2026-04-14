@@ -8,7 +8,7 @@ public class ApproachingState : AIState
 
     public override void OnEnter(AIContext ctx)
     {
-        if (ctx.agent != null)
+        if (ctx.AgentReady)
             ctx.agent.stoppingDistance = stoppingDistance;
     }
 
@@ -17,13 +17,13 @@ public class ApproachingState : AIState
         if (ctx.target != null)
             ctx.lastKnownTargetPosition = ctx.target.transform.position;
 
-        if (ctx.agent != null)
+        if (ctx.AgentReady)
             ctx.agent.SetDestination(ctx.lastKnownTargetPosition);
     }
 
     public override void OnExit(AIContext ctx)
     {
-        if (ctx.agent != null)
+        if (ctx.AgentReady)
             ctx.agent.ResetPath();
     }
 }
