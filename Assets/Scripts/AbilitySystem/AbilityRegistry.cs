@@ -17,9 +17,17 @@ public class AbilityRegistry : ScriptableObject
         return null;
     }
 
+    static bool IsBaseType(AbilityType t) =>
+        t == AbilityType.AttackBase ||
+        t == AbilityType.MeleeBase  ||
+        t == AbilityType.ShieldBase ||
+        t == AbilityType.DashBase   ||
+        t == AbilityType.JumpBase   ||
+        t == AbilityType.Passive;
+
     // Returns abilities valid for a given slot.
     // Passive slot: only Passive type abilities.
-    // All other slots: all non-Passive base abilities.
+    // All other slots: only *Base ability types (not modifiers, not passive).
     public List<Ability> GetBaseAbilitiesForSlot(ActionSlot slot)
     {
         var result = new List<Ability>();
@@ -33,7 +41,7 @@ public class AbilityRegistry : ScriptableObject
             }
             else
             {
-                if (a.abilityType != AbilityType.Passive)
+                if (IsBaseType(a.abilityType) && a.abilityType != AbilityType.Passive)
                     result.Add(a);
             }
         }

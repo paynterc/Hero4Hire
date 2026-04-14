@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ExplosiveShot
   m_EditorClassIdentifier: Assembly-CSharp::ExplosiveShotAbility
   abilityName: Explosive Shot
-  abilityType: 0
+  abilityType: 1
   energyCost: 5
   disableIK: 0
   cost: 0

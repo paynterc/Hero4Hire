@@ -132,13 +132,8 @@ public class AbilityLoadoutUI : MonoBehaviour
 
     void BuildModifierPicker()
     {
-        // Need an equipped base ability to know which modifiers are compatible
         var equippedAbility = GetEquippedAbility(_selectedSlot);
-        if (equippedAbility == null)
-        {
-            // No base ability equipped — show a message card or just leave empty
-            return;
-        }
+        if (equippedAbility == null) return;
 
         // Active modifiers for this slot first (shown as Remove cards)
         var activeModifiers = _loadout.modifiers.FindAll(
@@ -159,6 +154,7 @@ public class AbilityLoadoutUI : MonoBehaviour
 
         // Available modifiers filtered by the equipped ability's type
         var available = registry.GetModifiersForAbilityType(equippedAbility.abilityType);
+
         foreach (var ability in available)
         {
             bool alreadyActive = _loadout.modifiers.Exists(
@@ -166,7 +162,6 @@ public class AbilityLoadoutUI : MonoBehaviour
                      (m.isGlobal || m.targetSlot == _selectedSlot));
             if (alreadyActive) continue;
 
-            // A modifier with no validAbilityTypes is considered global across slots
             bool isGlobal  = ability.validAbilityTypes == null || ability.validAbilityTypes.Length == 0;
             bool canAfford = ability.cost == 0 || _loadout.resourcePoints >= ability.cost;
 
