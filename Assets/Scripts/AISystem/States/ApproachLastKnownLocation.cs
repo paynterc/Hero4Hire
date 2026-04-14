@@ -8,14 +8,14 @@ public class ApproachLastKnownLocation : AIState
 
     public override void OnEnter(AIContext ctx)
     {
-        if (ctx.agent == null) return;
+        if (!ctx.AgentReady) return;
         ctx.agent.stoppingDistance = stoppingDistance;
         ctx.agent.SetDestination(ctx.lastKnownTargetPosition);
     }
 
     public override void OnExit(AIContext ctx)
     {
-        if (ctx.agent != null)
+        if (ctx.AgentReady)
             ctx.agent.ResetPath();
     }
 }

@@ -13,7 +13,7 @@ public class StrafeState : AIState
 
     public override void OnEnter(AIContext ctx)
     {
-        if (ctx.agent == null) return;
+        if (!ctx.AgentReady) return;
         ctx.agent.stoppingDistance = stoppingDistance;
         ctx.agent.updateRotation = false;
 
@@ -32,7 +32,7 @@ public class StrafeState : AIState
 
     public override void OnExit(AIContext ctx)
     {
-        if (ctx.agent == null) return;
+        if (!ctx.AgentReady) return;
         ctx.agent.updateRotation = true;
         ctx.agent.ResetPath();
     }

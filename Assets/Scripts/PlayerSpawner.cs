@@ -15,7 +15,7 @@ public class PlayerSpawner : MonoBehaviour
         var cam = Camera.main;
         if (cam != null)
         {
-            var follow = cam.GetComponent<CameraFollow>();
+            var follow = cam.GetComponent<CameraFollowSweep>();
             if (follow != null)
                 follow.target = player.transform;
         }

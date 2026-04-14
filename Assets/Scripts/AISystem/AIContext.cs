@@ -19,4 +19,8 @@ public class AIContext
 
     public GameObject carriedObject;
     public Animator animator;
+
+    // True only when the NavMeshAgent is present, enabled, and on the NavMesh.
+    // Use this before any SetDestination / ResetPath / velocity access.
+    public bool AgentReady => agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh;
 }
