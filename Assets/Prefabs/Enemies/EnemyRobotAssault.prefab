@@ -312,6 +312,8 @@ MonoBehaviour:
     slot: 0
   - ability: {fileID: 11400000, guid: c880ef6ed05fa450298bea1eec820bf0, type: 2}
     slot: 0
+  - ability: {fileID: 11400000, guid: 4c049b43c5a5741d491f22fbe403c354, type: 2}
+    slot: 0
   firePoint: {fileID: 6534220702003317253}
 --- !u!114 &1662420770876600967
 MonoBehaviour:
@@ -402,7 +404,7 @@ MonoBehaviour:
     - condition:
         rid: 995870761215328323
       invert: 0
-      targetNodeName: ChargeWeapon
+      targetNodeName: Attack
     - condition:
         rid: 995870633243967571
       invert: 0
@@ -439,22 +441,6 @@ MonoBehaviour:
         rid: 995870761215328326
       invert: 0
       targetNodeName: Search
-  - name: ChargeWeapon
-    state:
-      rid: 995870854483542582
-    transitions:
-    - condition:
-        rid: 995870854483542583
-      invert: 0
-      targetNodeName: Attack
-    - condition:
-        rid: 995870854483542584
-      invert: 0
-      targetNodeName: Move to Last Known
-    - condition:
-        rid: 995870854483542585
-      invert: 1
-      targetNodeName: Move to Last Known
   currentStateName: 
   references:
     version: 2
@@ -482,9 +468,6 @@ MonoBehaviour:
       type: {class: AttackingState, ns: , asm: Assembly-CSharp}
       data:
         attackSlot: 0
-        attackInterval: 0.5
-        attackType: 0
-        meleeAnimatorTrigger: Attack
     - rid: 995870761215328325
       type: {class: ApproachLastKnownLocation, ns: , asm: Assembly-CSharp}
       data:
@@ -517,24 +500,6 @@ MonoBehaviour:
         obstacleLayers:
           serializedVersion: 2
           m_Bits: 256
-    - rid: 995870854483542582
-      type: {class: AttackingState, ns: , asm: Assembly-CSharp}
-      data:
-        attackSlot: 1
-        attackInterval: 100
-        attackType: 0
-        meleeAnimatorTrigger: Attack
-    - rid: 995870854483542583
-      type: {class: TimeoutCondition, ns: , asm: Assembly-CSharp}
-      data:
-        duration: 2
-    - rid: 995870854483542584
-      type: {class: TargetLostCondition, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 995870854483542585
-      type: {class: TargetInRangeCondition, ns: , asm: Assembly-CSharp}
-      data:
-        range: 10
 --- !u!114 &6582951699492934717
 MonoBehaviour:
   m_ObjectHideFlags: 0
