@@ -169,6 +169,13 @@ public class AbilitySystem : MonoBehaviour
     {
         return GetComponent<T>();
     }
+
+    public Animator GetAnimator()
+    {
+        foreach (var a in GetComponentsInChildren<Animator>())
+            if (a.runtimeAnimatorController != null) return a;
+        return null;
+    }
     
     public void Fire(ActionSlot slot)
 	{

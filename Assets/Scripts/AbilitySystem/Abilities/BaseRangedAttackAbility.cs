@@ -67,7 +67,7 @@ public class BaseRangedAttackAbility : Ability
             windupTimers[instance] = shot.windupTime;
 
             if (!string.IsNullOrEmpty(shot.windupAnimatorTrigger))
-                owner.GetComponentInChildren<Animator>()?.SetTrigger(shot.windupAnimatorTrigger);
+                system.GetAnimator()?.SetTrigger(shot.windupAnimatorTrigger);
 
             if (shot.windupPrefab != null)
             {
