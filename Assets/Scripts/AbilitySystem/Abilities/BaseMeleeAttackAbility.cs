@@ -20,6 +20,8 @@ public class MeleeComboStep
     public float slashZRot = 0f;
     public float slashScale = 1f;
     public GameObject impactPrefab;
+    public float windupTime = 0f;
+    public string windupAnimatorTrigger = "";
 }
 
 [CreateAssetMenu(menuName = "Abilities/Base Melee Attack")]
@@ -35,14 +37,18 @@ public class BaseMeleeAttackAbility : Ability
     public bool useAnimationEvents = false;
 
     // Per-instance runtime state (SO is shared, so keyed by instance)
-    private readonly Dictionary<AbilityInstance, int> comboIndices = new Dictionary<AbilityInstance, int>();
-    private readonly Dictionary<AbilityInstance, float> comboTimers = new Dictionary<AbilityInstance, float>();
+    private readonly Dictionary<AbilityInstance, int>           comboIndices  = new Dictionary<AbilityInstance, int>();
+    private readonly Dictionary<AbilityInstance, float>         comboTimers   = new Dictionary<AbilityInstance, float>();
     private readonly Dictionary<AbilityInstance, MeleeComboStep> pendingSteps = new Dictionary<AbilityInstance, MeleeComboStep>();
+    private readonly Dictionary<AbilityInstance, float>         windupTimers  = new Dictionary<AbilityInstance, float>();
+    private readonly Dictionary<AbilityInstance, bool>          wasHeld       = new Dictionary<AbilityInstance, bool>();
 
     public override void OnEquip(GameObject owner, AbilityInstance instance)
     {
         comboIndices[instance] = 0;
-        comboTimers[instance] = 0f;
+        comboTimers[instance]  = 0f;
+        windupTimers[instance] = -1f;
+        wasHeld[instance]      = false;
     }
 
     public override void OnUnequip(GameObject owner, AbilityInstance instance)
@@ -50,6 +56,8 @@ public class BaseMeleeAttackAbility : Ability
         comboIndices.Remove(instance);
         comboTimers.Remove(instance);
         pendingSteps.Remove(instance);
+        windupTimers.Remove(instance);
+        wasHeld.Remove(instance);
     }
 
     public override void InitializeMelee(GameObject owner, AbilityInstance instance, MeleeData melee)
@@ -57,25 +65,22 @@ public class BaseMeleeAttackAbility : Ability
         if (!MatchesSlot(instance, melee.slot)) return;
         if (!pendingSteps.TryGetValue(instance, out var step)) return;
 
-        melee.damage = step.damage;
-        melee.range = step.range;
-        melee.attackAngle = step.attackAngle;
-        melee.energyCost = step.energyCost;
-        melee.targetLayers = targetLayers;
-        melee.impactPrefab = step.impactPrefab;
-        melee.attackRate = attackRate;
+        melee.damage                 = step.damage;
+        melee.range                  = step.range;
+        melee.attackAngle            = step.attackAngle;
+        melee.energyCost             = step.energyCost;
+        melee.targetLayers           = targetLayers;
+        melee.impactPrefab           = step.impactPrefab;
+        melee.attackRate             = attackRate;
+        melee.windupTime             = step.windupTime;
+        melee.windupAnimatorTrigger  = step.windupAnimatorTrigger;
     }
 
     public override void OnUpdate(GameObject owner, AbilityInstance instance)
     {
-        
         var system = owner.GetComponent<AbilitySystem>();
         MeleeData data = system.GetData<MeleeData>(instance.slot);
-        //MeleeData data = new MeleeData();
-		//data.slot = instance.slot;
-        //system.BuildMeleeDataForSlot(data);
 
-        
         // Tick combo reset timer
         if (comboTimers.TryGetValue(instance, out float t))
         {
@@ -85,12 +90,40 @@ public class BaseMeleeAttackAbility : Ability
                 comboIndices[instance] = 0;
         }
 
-        if (!system.IsHeld(instance.slot)) return;
+        bool held = system.IsHeld(instance.slot);
+        bool prev = wasHeld.TryGetValue(instance, out bool wh) ? wh : false;
+        wasHeld[instance] = held;
+
+        if (!held)
+        {
+            windupTimers[instance] = -1f;
+            return;
+        }
+
         if (!instance.CanFire()) return;
         if (comboSteps.Count == 0) return;
 
-        int idx = comboIndices.TryGetValue(instance, out int i) ? i : 0;
+        int idx  = comboIndices.TryGetValue(instance, out int i) ? i : 0;
         var step = comboSteps[idx % comboSteps.Count];
+
+        // Transition: not-held → held — start windup if configured
+        if (!prev && step.windupTime > 0f)
+        {
+            windupTimers[instance] = step.windupTime;
+            if (!string.IsNullOrEmpty(step.windupAnimatorTrigger))
+                owner.GetComponentInChildren<Animator>()?.SetTrigger(step.windupAnimatorTrigger);
+            return;
+        }
+
+        // Still winding up — tick timer
+        if (windupTimers.TryGetValue(instance, out float remaining) && remaining > 0f)
+        {
+            windupTimers[instance] = remaining - Time.deltaTime;
+            return;
+        }
+
+        // Windup complete (or no windup) — reset timer for next press
+        windupTimers[instance] = -1f;
 
         var energy = owner.GetComponent<Energy>();
         if (energy == null || !energy.HasEnough(step.energyCost)) return;

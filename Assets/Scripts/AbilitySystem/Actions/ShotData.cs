@@ -19,5 +19,6 @@ public class ShotData : IActionData
 	public float energyCost = 0f;
 	public int damage = 10;
 	public float fireRate = 0.2f;
-
+	public float windupTime = 0f;
+	public string windupAnimatorTrigger = "";
 }
