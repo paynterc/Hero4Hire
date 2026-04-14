@@ -21,4 +21,5 @@ public class ShotData : IActionData
 	public float fireRate = 0.2f;
 	public float windupTime = 0f;
 	public string windupAnimatorTrigger = "";
+	public GameObject windupPrefab;
 }

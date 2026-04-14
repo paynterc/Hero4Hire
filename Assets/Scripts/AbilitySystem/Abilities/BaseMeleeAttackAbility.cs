@@ -22,6 +22,7 @@ public class MeleeComboStep
     public GameObject impactPrefab;
     public float windupTime = 0f;
     public string windupAnimatorTrigger = "";
+    public GameObject windupPrefab;
 }
 
 [CreateAssetMenu(menuName = "Abilities/Base Melee Attack")]
@@ -37,27 +38,38 @@ public class BaseMeleeAttackAbility : Ability
     public bool useAnimationEvents = false;
 
     // Per-instance runtime state (SO is shared, so keyed by instance)
-    private readonly Dictionary<AbilityInstance, int>           comboIndices  = new Dictionary<AbilityInstance, int>();
-    private readonly Dictionary<AbilityInstance, float>         comboTimers   = new Dictionary<AbilityInstance, float>();
-    private readonly Dictionary<AbilityInstance, MeleeComboStep> pendingSteps = new Dictionary<AbilityInstance, MeleeComboStep>();
-    private readonly Dictionary<AbilityInstance, float>         windupTimers  = new Dictionary<AbilityInstance, float>();
-    private readonly Dictionary<AbilityInstance, bool>          wasHeld       = new Dictionary<AbilityInstance, bool>();
+    private readonly Dictionary<AbilityInstance, int>            comboIndices    = new Dictionary<AbilityInstance, int>();
+    private readonly Dictionary<AbilityInstance, float>          comboTimers     = new Dictionary<AbilityInstance, float>();
+    private readonly Dictionary<AbilityInstance, MeleeComboStep> pendingSteps    = new Dictionary<AbilityInstance, MeleeComboStep>();
+    private readonly Dictionary<AbilityInstance, float>          windupTimers    = new Dictionary<AbilityInstance, float>();
+    private readonly Dictionary<AbilityInstance, bool>           wasHeld         = new Dictionary<AbilityInstance, bool>();
+    private readonly Dictionary<AbilityInstance, GameObject>     windupInstances = new Dictionary<AbilityInstance, GameObject>();
 
     public override void OnEquip(GameObject owner, AbilityInstance instance)
     {
-        comboIndices[instance] = 0;
-        comboTimers[instance]  = 0f;
-        windupTimers[instance] = -1f;
-        wasHeld[instance]      = false;
+        comboIndices[instance]    = 0;
+        comboTimers[instance]     = 0f;
+        windupTimers[instance]    = -1f;
+        wasHeld[instance]         = false;
+        windupInstances[instance] = null;
     }
 
     public override void OnUnequip(GameObject owner, AbilityInstance instance)
     {
+        DestroyWindupEffect(instance);
         comboIndices.Remove(instance);
         comboTimers.Remove(instance);
         pendingSteps.Remove(instance);
         windupTimers.Remove(instance);
         wasHeld.Remove(instance);
+        windupInstances.Remove(instance);
+    }
+
+    void DestroyWindupEffect(AbilityInstance instance)
+    {
+        if (windupInstances.TryGetValue(instance, out var fx) && fx != null)
+            Destroy(fx);
+        windupInstances[instance] = null;
     }
 
     public override void InitializeMelee(GameObject owner, AbilityInstance instance, MeleeData melee)
@@ -74,6 +86,7 @@ public class BaseMeleeAttackAbility : Ability
         melee.attackRate             = attackRate;
         melee.windupTime             = step.windupTime;
         melee.windupAnimatorTrigger  = step.windupAnimatorTrigger;
+        melee.windupPrefab           = step.windupPrefab;
     }
 
     public override void OnUpdate(GameObject owner, AbilityInstance instance)
@@ -97,6 +110,7 @@ public class BaseMeleeAttackAbility : Ability
         if (!held)
         {
             windupTimers[instance] = -1f;
+            DestroyWindupEffect(instance);
             return;
         }
 
@@ -110,19 +124,34 @@ public class BaseMeleeAttackAbility : Ability
         if (!prev && step.windupTime > 0f)
         {
             windupTimers[instance] = step.windupTime;
+
             if (!string.IsNullOrEmpty(step.windupAnimatorTrigger))
                 owner.GetComponentInChildren<Animator>()?.SetTrigger(step.windupAnimatorTrigger);
+
+            if (step.windupPrefab != null)
+            {
+                Transform spawnPoint = system.firePoint != null ? system.firePoint : owner.transform;
+                var fx = Instantiate(step.windupPrefab, spawnPoint.position, spawnPoint.rotation, spawnPoint);
+                fx.transform.localScale = Vector3.one * 0.25f;
+                windupInstances[instance] = fx;
+            }
             return;
         }
 
-        // Still winding up — tick timer
+        // Still winding up — scale effect and tick timer
         if (windupTimers.TryGetValue(instance, out float remaining) && remaining > 0f)
         {
+            if (windupInstances.TryGetValue(instance, out var fx) && fx != null)
+            {
+                float progress = 1f - (remaining / step.windupTime);
+                fx.transform.localScale = Vector3.one * Mathf.Lerp(0.25f, 1f, progress);
+            }
             windupTimers[instance] = remaining - Time.deltaTime;
             return;
         }
 
-        // Windup complete (or no windup) — reset timer for next press
+        // Windup complete (or no windup) — destroy effect, reset for next press
+        DestroyWindupEffect(instance);
         windupTimers[instance] = -1f;
 
         var energy = owner.GetComponent<Energy>();

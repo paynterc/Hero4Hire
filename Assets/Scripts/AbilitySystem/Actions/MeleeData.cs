@@ -15,4 +15,5 @@ public class MeleeData : IActionData
     public float attackRate = .5f;
     public float windupTime = 0f;
     public string windupAnimatorTrigger = "";
+    public GameObject windupPrefab;
 }
