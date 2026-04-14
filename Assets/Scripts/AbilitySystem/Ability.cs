@@ -24,7 +24,8 @@ public enum ActionSlot
     Ultimate,
     Action1,
     Action2,
-    Action3
+    Action3,
+    Passive
 }
 
 
@@ -39,8 +40,8 @@ public abstract class Ability : ScriptableObject
     public Sprite icon;
     [TextArea]
     public string description = "";
-    [Tooltip("For base abilities: which slots this can fill. Leave empty for modifiers.")]
-    public ActionSlot[] validSlots;
+    [Tooltip("For modifiers: which base ability types this modifier can be applied to. Leave empty to apply to all types.")]
+    public AbilityType[] validAbilityTypes;
 
     public virtual void OnEquip(GameObject owner, AbilityInstance instance) { }
     public virtual void OnUnequip(GameObject owner, AbilityInstance instance) { }

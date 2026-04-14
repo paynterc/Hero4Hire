@@ -28,7 +28,7 @@ public class AbilityLoadoutUI : MonoBehaviour
     // ── Runtime state ──────────────────────────────────────────────────────────
 
     private AbilityLoadout _loadout;
-    private ActionSlot     _selectedSlot = ActionSlot.Primary;
+    private ActionSlot     _selectedSlot     = ActionSlot.Primary;
     private bool           _showingModifiers = false;
 
     private readonly Dictionary<ActionSlot, AbilitySlotRow> _slotRows
@@ -69,8 +69,7 @@ public class AbilityLoadoutUI : MonoBehaviour
             Destroy(child.gameObject);
         _slotRows.Clear();
 
-        var slots = System.Enum.GetValues(typeof(ActionSlot));
-        foreach (ActionSlot slot in slots)
+        foreach (ActionSlot slot in System.Enum.GetValues(typeof(ActionSlot)))
         {
             var go  = Instantiate(slotRowPrefab, slotListContainer);
             var row = go.GetComponent<AbilitySlotRow>();
@@ -86,14 +85,14 @@ public class AbilityLoadoutUI : MonoBehaviour
 
     public void SelectSlot(ActionSlot slot)
     {
-        _selectedSlot    = slot;
+        _selectedSlot     = slot;
         _showingModifiers = false;
         RebuildPicker();
     }
 
     public void ShowModifiers(ActionSlot slot)
     {
-        _selectedSlot    = slot;
+        _selectedSlot     = slot;
         _showingModifiers = true;
         RebuildPicker();
     }
@@ -109,58 +108,76 @@ public class AbilityLoadoutUI : MonoBehaviour
 
         if (!_showingModifiers)
         {
-            // Base ability picker
-            var bases = registry.GetBaseAbilitiesForSlot(_selectedSlot);
-            foreach (var ability in bases)
-            {
-                var go   = Instantiate(abilityCardPrefab, abilityPickerContainer);
-                var card = go.GetComponent<AbilityCardUI>();
-                if (card == null) continue;
-
-                var captured = ability;
-                card.SetupBase(captured, () => EquipBase(captured, _selectedSlot));
-            }
+            BuildBasePicker();
         }
         else
         {
-            // Modifier picker — active modifiers first (as Remove cards), then available
-            var activeModifiers = _loadout.modifiers.FindAll(
-                m => m.isGlobal || m.targetSlot == _selectedSlot);
+            BuildModifierPicker();
+        }
+    }
 
-            foreach (var entry in activeModifiers)
-            {
-                var ability = registry.FindByName(entry.abilityName);
-                if (ability == null) continue;
+    void BuildBasePicker()
+    {
+        var bases = registry.GetBaseAbilitiesForSlot(_selectedSlot);
+        foreach (var ability in bases)
+        {
+            var go   = Instantiate(abilityCardPrefab, abilityPickerContainer);
+            var card = go.GetComponent<AbilityCardUI>();
+            if (card == null) continue;
 
-                var go   = Instantiate(abilityCardPrefab, abilityPickerContainer);
-                var card = go.GetComponent<AbilityCardUI>();
-                if (card == null) continue;
+            var captured = ability;
+            card.SetupBase(captured, () => EquipBase(captured, _selectedSlot));
+        }
+    }
 
-                var capturedEntry = entry;
-                card.SetupRemove(ability, () => RemoveModifier(capturedEntry));
-            }
+    void BuildModifierPicker()
+    {
+        // Need an equipped base ability to know which modifiers are compatible
+        var equippedAbility = GetEquippedAbility(_selectedSlot);
+        if (equippedAbility == null)
+        {
+            // No base ability equipped — show a message card or just leave empty
+            return;
+        }
 
-            var available = registry.GetModifiersForSlot(_selectedSlot);
-            foreach (var ability in available)
-            {
-                // Skip already-active
-                bool alreadyActive = _loadout.modifiers.Exists(
-                    m => m.abilityName == ability.abilityName &&
-                         (m.isGlobal || m.targetSlot == _selectedSlot));
-                if (alreadyActive) continue;
+        // Active modifiers for this slot first (shown as Remove cards)
+        var activeModifiers = _loadout.modifiers.FindAll(
+            m => m.isGlobal || m.targetSlot == _selectedSlot);
 
-                bool isGlobal   = ability.validSlots == null || ability.validSlots.Length == 0;
-                bool canAfford  = ability.cost == 0 || _loadout.resourcePoints >= ability.cost;
+        foreach (var entry in activeModifiers)
+        {
+            var ability = registry.FindByName(entry.abilityName);
+            if (ability == null) continue;
 
-                var go   = Instantiate(abilityCardPrefab, abilityPickerContainer);
-                var card = go.GetComponent<AbilityCardUI>();
-                if (card == null) continue;
+            var go   = Instantiate(abilityCardPrefab, abilityPickerContainer);
+            var card = go.GetComponent<AbilityCardUI>();
+            if (card == null) continue;
 
-                var capturedAbility  = ability;
-                var capturedIsGlobal = isGlobal;
-                card.SetupModifier(capturedAbility, canAfford,
-                    () => AddModifier(capturedAbility, _selectedSlot, capturedIsGlobal));
-            }
+            var capturedEntry = entry;
+            card.SetupRemove(ability, () => RemoveModifier(capturedEntry));
+        }
+
+        // Available modifiers filtered by the equipped ability's type
+        var available = registry.GetModifiersForAbilityType(equippedAbility.abilityType);
+        foreach (var ability in available)
+        {
+            bool alreadyActive = _loadout.modifiers.Exists(
+                m => m.abilityName == ability.abilityName &&
+                     (m.isGlobal || m.targetSlot == _selectedSlot));
+            if (alreadyActive) continue;
+
+            // A modifier with no validAbilityTypes is considered global across slots
+            bool isGlobal  = ability.validAbilityTypes == null || ability.validAbilityTypes.Length == 0;
+            bool canAfford = ability.cost == 0 || _loadout.resourcePoints >= ability.cost;
+
+            var go   = Instantiate(abilityCardPrefab, abilityPickerContainer);
+            var card = go.GetComponent<AbilityCardUI>();
+            if (card == null) continue;
+
+            var capturedAbility  = ability;
+            var capturedIsGlobal = isGlobal;
+            card.SetupModifier(capturedAbility, canAfford,
+                () => AddModifier(capturedAbility, _selectedSlot, capturedIsGlobal));
         }
     }
 
@@ -168,7 +185,6 @@ public class AbilityLoadoutUI : MonoBehaviour
 
     public void EquipBase(Ability ability, ActionSlot slot)
     {
-        // Replace or add slot entry
         int idx = _loadout.slots.FindIndex(e => e.slot == slot);
         if (idx >= 0)
             _loadout.slots[idx].abilityName = ability.abilityName;
@@ -228,6 +244,12 @@ public class AbilityLoadoutUI : MonoBehaviour
     {
         var entry = _loadout.slots.Find(e => e.slot == slot);
         return entry?.abilityName ?? "";
+    }
+
+    Ability GetEquippedAbility(ActionSlot slot)
+    {
+        var name = GetEquippedName(slot);
+        return string.IsNullOrEmpty(name) ? null : registry?.FindByName(name);
     }
 
     void RefreshResourceLabel()

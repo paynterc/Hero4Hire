@@ -17,33 +17,44 @@ public class AbilityRegistry : ScriptableObject
         return null;
     }
 
+    // Returns abilities valid for a given slot.
+    // Passive slot: only Passive type abilities.
+    // All other slots: all non-Passive base abilities.
     public List<Ability> GetBaseAbilitiesForSlot(ActionSlot slot)
     {
         var result = new List<Ability>();
         foreach (var a in baseAbilities)
         {
             if (a == null) continue;
-            if (a.validSlots == null || a.validSlots.Length == 0) continue;
-            foreach (var s in a.validSlots)
-                if (s == slot) { result.Add(a); break; }
+            if (slot == ActionSlot.Passive)
+            {
+                if (a.abilityType == AbilityType.Passive)
+                    result.Add(a);
+            }
+            else
+            {
+                if (a.abilityType != AbilityType.Passive)
+                    result.Add(a);
+            }
         }
         return result;
     }
 
-    public List<Ability> GetModifiersForSlot(ActionSlot slot)
+    // Returns modifiers compatible with the given base ability type.
+    // A modifier with an empty validAbilityTypes applies to all types.
+    public List<Ability> GetModifiersForAbilityType(AbilityType abilityType)
     {
         var result = new List<Ability>();
         foreach (var a in modifiers)
         {
             if (a == null) continue;
-            // Global modifiers (no validSlots) are always included
-            if (a.validSlots == null || a.validSlots.Length == 0)
+            if (a.validAbilityTypes == null || a.validAbilityTypes.Length == 0)
             {
                 result.Add(a);
                 continue;
             }
-            foreach (var s in a.validSlots)
-                if (s == slot) { result.Add(a); break; }
+            foreach (var t in a.validAbilityTypes)
+                if (t == abilityType) { result.Add(a); break; }
         }
         return result;
     }
@@ -67,7 +78,6 @@ public class AbilityRegistry : ScriptableObject
 
             if (entry.isGlobal)
             {
-                // Add to every occupied slot
                 var occupiedSlots = new HashSet<ActionSlot>();
                 foreach (var b in bindings) occupiedSlots.Add(b.slot);
                 foreach (var s in occupiedSlots)

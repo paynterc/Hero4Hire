@@ -12,6 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1568ecf3568a4f949abe88a0a2711a0, type: 3}
   m_Name: AbilityRegistry
   m_EditorClassIdentifier: Assembly-CSharp::AbilityRegistry
-  baseAbilities: []
+  baseAbilities:
+  - {fileID: 11400000, guid: 64843b7f060f548569bb2930b13b8590, type: 2}
+  - {fileID: 11400000, guid: 15007a529db15433890250402d039f15, type: 2}
+  - {fileID: 11400000, guid: 2640ffd7c7cdd42b38aac6c26d1e0fdb, type: 2}
+  - {fileID: 11400000, guid: 450c93fe7aa004708a8c1d9215084820, type: 2}
+  - {fileID: 11400000, guid: cf35ed0e34b664f9da4cc02949addc6c, type: 2}
+  - {fileID: 11400000, guid: e118f97342abc4b2da1f18623feb94f4, type: 2}
+  - {fileID: 11400000, guid: 76f583641c1414acfb26b5f7e9e86144, type: 2}
+  - {fileID: 11400000, guid: a19f0d4c96cef4e689de19d1233b217c, type: 2}
+  - {fileID: 11400000, guid: 527e06da6733345c285db23c7398975a, type: 2}
+  - {fileID: 11400000, guid: f38d792a6d56f4a06a073065c28fd513, type: 2}
+  - {fileID: 11400000, guid: 960fc3b3ac9cc43798415e7ff91661be, type: 2}
   modifiers: []
   startingResourcePoints: 10
