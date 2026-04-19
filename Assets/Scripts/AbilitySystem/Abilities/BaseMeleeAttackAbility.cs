@@ -126,7 +126,7 @@ public class BaseMeleeAttackAbility : Ability
             windupTimers[instance] = step.windupTime;
 
             if (!string.IsNullOrEmpty(step.windupAnimatorTrigger))
-                owner.GetComponentInChildren<Animator>()?.SetTrigger(step.windupAnimatorTrigger);
+                system.GetAnimator()?.SetTrigger(step.windupAnimatorTrigger);
 
             if (step.windupPrefab != null)
             {
@@ -174,7 +174,7 @@ public class BaseMeleeAttackAbility : Ability
         }
 
         if (!string.IsNullOrEmpty(step.animatorTrigger))
-            owner.GetComponentInChildren<Animator>()?.SetTrigger(step.animatorTrigger);
+            system.GetAnimator()?.SetTrigger(step.animatorTrigger);
 
         if (attackSound != null)
             AudioSource.PlayClipAtPoint(attackSound, owner.transform.position);

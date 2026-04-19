@@ -24,7 +24,8 @@ public enum ActionSlot
     Ultimate,
     Action1,
     Action2,
-    Action3
+    Action3,
+    Passive
 }
 
 
@@ -34,6 +35,13 @@ public abstract class Ability : ScriptableObject
     public AbilityType abilityType;
 	public float energyCost = 20f;
     public bool disableIK = false;
+
+    public int cost = 0;
+    public Sprite icon;
+    [TextArea]
+    public string description = "";
+    [Tooltip("For modifiers: which base ability types this modifier can be applied to. Leave empty to apply to all types.")]
+    public AbilityType[] validAbilityTypes;
 
     public virtual void OnEquip(GameObject owner, AbilityInstance instance) { }
     public virtual void OnUnequip(GameObject owner, AbilityInstance instance) { }

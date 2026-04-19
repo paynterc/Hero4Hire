@@ -15,6 +15,10 @@ MonoBehaviour:
   abilityName: Jump
   abilityType: 4
   energyCost: 0
-  slot: 2
+  disableIK: 0
+  cost: 0
+  icon: {fileID: 0}
+  description: 
+  validSlots: 02000000
   jumpSound: {fileID: 0}
   jumpForce: 20

@@ -16,6 +16,10 @@ MonoBehaviour:
   abilityType: 0
   energyCost: 5
   disableIK: 0
+  cost: 0
+  icon: {fileID: 0}
+  description: 
+  validSlots: 0000000001000000
   projectilePrefab: {fileID: 1523153560657062, guid: 81c4f6a987bb9b44184e51ede81129d5, type: 3}
   muzzleFlashPrefab: {fileID: 1000012903210382, guid: 575f1cf1c4503354a9a2e195b40e2bea, type: 3}
   fireSound: {fileID: 0}

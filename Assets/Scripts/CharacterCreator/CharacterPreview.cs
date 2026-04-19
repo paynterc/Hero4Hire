@@ -63,7 +63,9 @@ public class CharacterPreview : MonoBehaviour
 
         currentBody  = Instantiate(bodyPrefabs[index], transform.position, transform.rotation, transform);
         BodyAnimator = currentBody.GetComponentInChildren<Animator>();
-
+		if(BodyAnimator){
+			BodyAnimator.SetBool("IsGrounded", true);
+		}
         var relay = currentBody.GetComponentInChildren<AnimatorIKRelay>();
         if (relay != null)
             relay.playerIK = GetComponent<PlayerIK>();

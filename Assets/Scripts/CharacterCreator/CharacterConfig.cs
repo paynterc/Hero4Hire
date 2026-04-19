@@ -18,6 +18,7 @@ public class CharacterConfig
     public float   decalWidth       = 0.5f;
     public float   decalHeight      = 0.5f;
     public string  portraitPath     = "";
+    public AbilityLoadout loadout = new AbilityLoadout();
 
     public CharacterConfig()
     {
