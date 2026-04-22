@@ -40,6 +40,7 @@ public class CharacterCreatorUI : MonoBehaviour
 
     [Header("UI Elements")]
     public TMP_InputField nameInput;
+    public TMP_Text       nameDisplay;
     public Button         saveButton;
 
     [Header("Decal")]
@@ -73,7 +74,12 @@ public class CharacterCreatorUI : MonoBehaviour
         ShowPalettesFor(PaletteMode.Body);
 
         nameInput.text = config.characterName;
-        nameInput.onValueChanged.AddListener(v => config.characterName = v);
+        if (nameDisplay != null) nameDisplay.text = config.characterName;
+        nameInput.onValueChanged.AddListener(v =>
+        {
+            config.characterName = v;
+            if (nameDisplay != null) nameDisplay.text = v;
+        });
         saveButton.onClick.AddListener(OnSave);
 
         // Wire color target buttons
@@ -184,31 +190,36 @@ public class CharacterCreatorUI : MonoBehaviour
         {
             int slot = i - 1;
             AddRow(SlotLabels[i],
+                () => SelectSlot(slot),
                 () => Step(slot, -1),
                 () => Step(slot, +1));
         }
 
         AddRow("Decal",
+            () => SelectDecal(),
             () => StepDecal(-1),
             () => StepDecal(+1));
 
         AddRow("Decal W",
+            () => SelectDecal(),
             () => StepDecalWidth(-decalSizeStep),
             () => StepDecalWidth(+decalSizeStep));
 
         AddRow("Decal H",
+            () => SelectDecal(),
             () => StepDecalHeight(-decalSizeStep),
             () => StepDecalHeight(+decalSizeStep));
     }
 
-    void AddRow(string label, System.Action onBack, System.Action onForward)
+    void AddRow(string label, System.Action onSelect, System.Action onBack, System.Action onForward)
     {
         var row     = Instantiate(rowPrefab, rowContainer);
         var texts   = row.GetComponentsInChildren<TMP_Text>();
         var buttons = row.GetComponentsInChildren<Button>();
         texts[0].text = label;
-        buttons[0].onClick.AddListener(() => onBack());
-        buttons[1].onClick.AddListener(() => onForward());
+        buttons[0].onClick.AddListener(() => onSelect());   // label button
+        buttons[1].onClick.AddListener(() => onBack());
+        buttons[2].onClick.AddListener(() => onForward());
     }
 
     // ── Palette visibility ────────────────────────────────────────────────
@@ -223,6 +234,29 @@ public class CharacterCreatorUI : MonoBehaviour
             accessoryColorButtons.SetActive(mode == PaletteMode.Accessory);
         if (decalColorButtons != null)
             decalColorButtons.SetActive(mode == PaletteMode.Decal);
+    }
+
+    // ── Select slot for coloring (no step) ───────────────────────────────
+
+    void SelectSlot(int slot)
+    {
+        activeSlot = slot;
+        if (slot < 0)
+        {
+            ShowPalettesFor(PaletteMode.Body);
+            SetColorTarget(ColorTarget.Skin);
+        }
+        else
+        {
+            ShowPalettesFor(PaletteMode.Accessory);
+            SetColorTarget(ColorTarget.Accessory);
+        }
+    }
+
+    void SelectDecal()
+    {
+        ShowPalettesFor(PaletteMode.Decal);
+        SetColorTarget(ColorTarget.Decal);
     }
 
     // ── Step forward / back ───────────────────────────────────────────────
