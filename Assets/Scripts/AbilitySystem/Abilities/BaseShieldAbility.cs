@@ -5,7 +5,7 @@ public class BaseShieldAbility : Ability
 {
     public GameObject shieldPrefab;
     public float duration = 5f;
-    public int shieldHealth = 100;
+    public float shieldHealth = 100f;
     public float radius = 2f;
     public float cooldown = 15f;
     public float yOffset = 0f;

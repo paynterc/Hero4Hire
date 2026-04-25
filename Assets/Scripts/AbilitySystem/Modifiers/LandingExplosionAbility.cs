@@ -5,7 +5,7 @@ public class LandingExplosionAbility : Ability
 {
     public GameObject explosionPrefab;
     public float explosionRadius = 5f;
-    public int explosionDamage = 50;
+    public float explosionDamage = 50f;
     public LayerMask damageLayers;
     
     

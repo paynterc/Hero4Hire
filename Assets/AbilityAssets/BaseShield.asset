@@ -12,10 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57f536b95ecff4ccc982b6b5a1a98886, type: 3}
   m_Name: BaseShield
   m_EditorClassIdentifier: Assembly-CSharp::BaseShieldAbility
-  abilityName: BaseShield
+  abilityName: Energy Shield
   abilityType: 0
   energyCost: 20
   disableIK: 0
+  cost: 0
+  icon: {fileID: 0}
+  description: 
+  validAbilityTypes: 
   shieldPrefab: {fileID: 1845869020395022781, guid: 7f328348cbe514819a8b74466ff7b275, type: 3}
   duration: 5
   shieldHealth: 100

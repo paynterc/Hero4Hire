@@ -118,7 +118,7 @@ public class BaseRangedAttackAbility : Ability
         {
             var health = target.GetComponentInParent<Health>();
             if (health != null)
-                health.TakeDamage((int)data.damage, data.context.owner);
+                health.TakeDamage(data.damage, data.context.owner);
         };
     }
 }

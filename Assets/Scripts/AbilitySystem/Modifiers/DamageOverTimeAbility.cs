@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Abilities/Modifiers/Damage Over Time")]
 public class DamageOverTimeAbility : Ability
 {
-    public int damagePerTick = 5;
+    public float damagePerTick = 5f;
     public float tickInterval = 1f;
     public float duration = 5f;
     [Tooltip("If false, re-hitting the same target resets the timer instead of adding a new stack.")]

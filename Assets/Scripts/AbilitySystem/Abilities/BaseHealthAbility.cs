@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Abilities/Base Health Ability")]
 public class BaseHealthAbility : Ability
 {
-	public int bonusHelth = 10;
+	public float bonusHelth = 10f;
 
     public override void OnEquip(GameObject owner, AbilityInstance instance)
     {

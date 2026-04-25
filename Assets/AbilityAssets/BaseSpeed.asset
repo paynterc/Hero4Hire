@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea1f019480012482dbe654852225366b, type: 3}
-  m_Name: BaseRegenAbility
-  m_EditorClassIdentifier: Assembly-CSharp::BaseRegenAbility
-  abilityName: Regenerate
+  m_Script: {fileID: 11500000, guid: 4c96c2de49097408da13ad0f7f10f99f, type: 3}
+  m_Name: BaseSpeed
+  m_EditorClassIdentifier: Assembly-CSharp::BaseSpeedAbility
+  abilityName: Speed Boost
   abilityType: 10
   energyCost: 0
   disableIK: 0
-  cost: 10
+  cost: 5
   icon: {fileID: 0}
-  description: Regenerate health over time.
+  description: Increase movement speed
   validAbilityTypes: 
-  regenPerSecond: 3
+  pct: 50

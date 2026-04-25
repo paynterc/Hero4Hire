@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Abilities/Modifiers/Shield Spikes")]
 public class ShieldSpikesAbility : Ability
 {
-    public int damagePerHit = 10;
+    public float damagePerHit = 10f;
 
     public override void OnActivateShield(GameObject owner, AbilityInstance instance, ShieldInstance shield)
     {

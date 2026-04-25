@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    public int maxHealth = 100;
-    public int currentHealth;
+    public float maxHealth = 100f;
+    public float currentHealth;
 
     public bool isInvulnerable = false;
     public Health damageRedirect;
@@ -19,7 +19,7 @@ public class Health : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(int amount, GameObject attacker = null)
+    public void TakeDamage(float amount, GameObject attacker = null)
     {
         if (damageRedirect != null)
         {
@@ -28,13 +28,13 @@ public class Health : MonoBehaviour
         }
         if (isInvulnerable || isDead) return;
 
-        currentHealth = Mathf.Max(currentHealth - amount, 0);
+        currentHealth = Mathf.Max(currentHealth - amount, 0f);
 
         Debug.Log($"{gameObject.name} Took damage: " + amount);
 
         OnDamage?.Invoke(attacker);
 
-        if (currentHealth <= 0)
+        if (currentHealth <= 0f)
         {
             isDead = true;
             OnDeath?.Invoke();

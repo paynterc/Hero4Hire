@@ -207,7 +207,7 @@ public class BaseMeleeAttackAbility : Ability
             var health = hit.GetComponentInParent<Health>();
             if (health != null)
             {
-                health.TakeDamage((int)melee.damage, melee.context?.owner);
+                health.TakeDamage(melee.damage, melee.context?.owner);
                 melee.OnHit?.Invoke(hit.gameObject);
 
                 

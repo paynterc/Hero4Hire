@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DamageOverTime : MonoBehaviour
 {
-    [HideInInspector] public int damagePerTick;
+    [HideInInspector] public float damagePerTick;
     [HideInInspector] public float tickInterval;
     [HideInInspector] public float duration;
     [HideInInspector] public GameObject attacker;
